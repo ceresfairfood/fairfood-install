@@ -46,12 +46,14 @@ unicorn_timeout: 60
 
 #----------------------------------------------------------------------
 # nginx config
+#
+# Use of `deferred` delays handling a request until the client sent data.
 
 nginx_sites_available:
   default:
     - |
-      listen 80 default_server;
-      listen [::]:80 default_server;
+      listen 80 default_server deferred;
+      listen [::]:80 default_serve deferredr;
       server_name _;
       access_log off;
       # nginx code to close the connection without sending any data:
@@ -59,8 +61,8 @@ nginx_sites_available:
 
   fairfood_http:
     - |
-      listen 80;
-      listen [::]:80;
+      listen 80 deferred;
+      listen [::]:80 deferred;
       server_name {{ domain }};
 
       add_header X-Content-Type-Options nosniff;
@@ -94,8 +96,8 @@ nginx_sites_available:
 
   fairfood_http_to_https_redirect:
     - |
-      listen 80;
-      listen [::]:80;
+      listen 80 deferred;
+      listen [::]:80 deferred;
       server_name {{ domain }};
 
       add_header X-Content-Type-Options nosniff;
@@ -114,8 +116,8 @@ nginx_sites_available:
 
   fairfood_https:
     - |
-      listen 443 ssl;
-      listen [::]:443 ssl;
+      listen 443 ssl deferred;
+      listen [::]:443 ssl deferred;
       server_name {{ domain }};
       root {{ app_root }}/public;
 
