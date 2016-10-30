@@ -1,0 +1,40 @@
+---
+# The main playbook to install Ceres Fair Food on a server
+
+- hosts: vagrant
+
+  roles:
+    - role: geerlingguy.security
+      become: yes
+
+    - role: app-user
+
+    - role: zzet.rbenv
+      rbenv:
+        env: user
+        version: v0.4.0
+        ruby_version: 1.9.3-p551
+      rbenv_owner: "{{ app_user }}"
+      rbenv_group: "{{ app_user }}"
+      rbenv_users:
+        - "{{ app_user }}"
+
+    - role: mysql
+      become: yes
+
+    - role: unicorn
+      become: yes
+
+    - role: jdauphant.nginx
+      vars:
+        nginx_sites:
+          fairfood: "{{ nginx_sites_available.fairfood_http }}"
+      become: yes
+      when: not https
+
+    - role: fairfood-dependencies
+      become: yes
+
+    - role: fairfood
+      become: yes
+      become_user: "{{ app_user }}"

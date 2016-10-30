@@ -1,0 +1,10 @@
+---
+
+- name: Install system dependencies of the fairfood application
+  apt:
+    pkg: "{{ item }}"
+    state: "present"
+  become: yes
+  with_items:
+    - git
+    - imagemagick

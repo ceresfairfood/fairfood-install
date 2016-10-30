@@ -1,0 +1,60 @@
+---
+# Initialise the working directory
+
+- name: Authorise your SSH key to access the app user for push deploys
+  authorized_key:
+    user: "{{ app_user }}"
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
+- name: Install bundler
+  # This needs to be run inside a bash shell to initialise rbenv
+  # See http://stackoverflow.com/questions/22115936/install-bundler-gem-using-ansible
+  command: bash -lc "gem install bundler --no-ri --no-rdoc"
+  args:
+    creates: "{{ ansible_env.HOME }}/.rbenv/shims/bundler"
+
+- name: Create directory for Git repository
+  file:
+    path: "{{ build_path }}"
+    state: directory
+
+- name: Initialise empty Git repository
+  command: git init
+  args:
+    chdir: "{{ build_path }}"
+    creates: ".git"
+
+# The given SHA-1 sum identifies the empty tree of a fresh repo.
+# You can create it by `git hash-object -t tree /dev/null`.
+- name: Detach head for push deployment
+  copy:
+    content: 4b825dc642cb6eb9a060e54bf8d69288fbee4904
+    dest: "{{ build_path }}/.git/HEAD"
+
+- name: Create required directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: true
+  with_items:
+    - "{{ config_path }}"
+    - "{{ sock_path }}"
+
+- name: Install configuration files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0775
+  with_items:
+    - { src: "post-receive.j2", dest: "{{ build_path }}/.git/hooks/post-receive" }
+    - { src: "database.yml.j2", dest: "{{ config_path }}/database.yml" }
+
+- name: Commands to deploy
+  vars:
+    msg: |
+         {{ inventory_hostname }} is now ready for deployments via `git push`.
+         You can now go to your fairfood git repository and deploy:
+
+             git push {{ app_user }}@{{ inventory_hostname }}:{{ current_path }}
+  debug:
+    msg: "{{ msg.split('\n') }}"

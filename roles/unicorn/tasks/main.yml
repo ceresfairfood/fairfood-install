@@ -1,0 +1,23 @@
+---
+# Install unicorn app service
+
+- name: copy unicorn files
+  template:
+    src={{ item.src }}
+    dest={{ item.dest }}
+    mode={{ item.mode }}
+    owner={{ item.owner }}
+    group={{ item.group }}
+  become: yes
+  with_items:
+    - { src: "unicorn_init.j2", dest: "/etc/init.d/unicorn_{{ app }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
+    - { src: "unicorn.service.j2", dest: "/etc/systemd/system/unicorn_{{ app }}.service", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
+    - { src: "unicorn.rb.j2", dest: "{{ unicorn_config }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
+  notify:
+    - restart nginx
+
+- name: update unicorn
+  service:
+    name=unicorn_{{ app }}
+    enabled=yes
+  become: yes

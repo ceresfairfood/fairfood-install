@@ -1,0 +1,18 @@
+
+# unicorn_rails -c config/unicorn.rb -E production -D
+
+working_directory "{{ current_path }}"
+pid "{{ unicorn_pid }}"
+stderr_path "{{ unicorn_log }}"
+stdout_path "{{ unicorn_log }}"
+
+listen "{{ unicorn_sock }}", backlog: 128
+worker_processes {{ unicorn_workers }}
+timeout {{ unicorn_timeout }}
+
+# save the worker pids to disk so we can monitor them
+after_fork do |server, worker|
+  worker_pid = "{{ pid_path }}/unicorn.#{worker.nr}.pid"
+  system("echo #{Process.pid} > #{worker_pid}")
+end
+

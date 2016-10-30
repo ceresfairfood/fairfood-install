@@ -1,0 +1,38 @@
+---
+# MySQL setup
+# Execute this role as root
+
+- name: install mysql packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - mysql-server
+    - python-mysqldb # required by Ansible mysql_db
+    - libmysqlclient-dev # required by mysql2 gem
+
+- name: Create production database
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present
+  register: db_created
+
+- name: Copy data file to server
+  copy:
+    src: "{{ mysql_data_file }}"
+    dest: "/tmp/fairfood-init.sql"
+  when: db_created.changed
+
+- name: Import initial data
+  mysql_db:
+    name: "{{ db_name }}"
+    state: import
+    target: "/tmp/fairfood-init.sql"
+  when: db_created.changed
+  
+#- name: remove all anonymous user accounts
+#  mysql_user: name='' host_all=yes state=absent
+#  become: yes
+
+#- name: create db user
+#  mysql_user: name=bob password=12345 priv=ceres_prod.*:ALL state=present

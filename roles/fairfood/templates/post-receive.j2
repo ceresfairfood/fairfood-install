@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# bash is needed to `source` rbenv stuff
+
+# Go to the working tree
+cd "$GIT_DIR/.." || exit 1
+
+# $GIT_DIR is '.' which is not valid any more
+unset GIT_DIR
+
+# Setup environment
+APP_ROOT="$(pwd)"
+source /etc/profile.d/rbenv.sh
+export RAILS_ENV="{{ rails_env }}"
+
+upgrade_application() {
+	# Install the required gems
+	# Note: the 'LANG=en_US.UTF-8' is a fix for jquery-rails 1.0.17...fails even though server has correct locale setting
+	LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test"
+	
+	echo "Migrating database..."
+	bundle exec rake db:migrate
+
+	# Note: Calling standard assets:precompile is overkill and chews up heaps of memory. 
+	#       Hence do steps one-by-one
+	#echo Doing total bundle install thing
+	#bundle exec rake assets:precompile RAILS_GROUPS=assets
+	echo "Doing asset:precompile:primary..."
+	bundle exec rake assets:precompile:primary RAILS_GROUPS=assets
+	echo "Doing asset:precompile:nondigest..."
+	bundle exec rake assets:precompile:nondigest RAILS_GROUPS=assets
+
+        # Configure CDN with Ansible
+	# upload all assets to the CDN
+	#echo Upload all assets to CDN live:upload_assets
+	#bundle exec rake live:upload_assets
+	
+        # TODO: make schedule server agnostic
+	# install required cron jobs
+	#bundle exec whenever --set 'environment=production' --update-crontab members.ceresfairfood.org.au
+	
+	# Restart DJ workers
+	./script/delayed_job restart
+
+	# restart the rails process. The upgrade happens in place, no requests
+	# should be dropped
+	#sudo /etc/init.d/rails-fairfood upgrade
+        /etc/init.d/unicorn_{{ app }} upgrade
+	
+	# tell bugsnag about the deploy, keeps the error history clean
+	bundle exec rake bugsnag:deploy TO="$RAILS_ENV"
+}
+
+while read oldrev newrev refname; do
+	if [ "$refname" = "refs/heads/master" ]; then
+		# Checkout the new revision
+		git reset --hard "$newrev"
+		upgrade_application
+	fi
+done
+
+exit 0
