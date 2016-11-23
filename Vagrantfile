@@ -17,7 +17,6 @@ Vagrant.configure(2) do |config|
   # Custom Virtualbox configuration
   config.vm.provider :virtualbox do |vbox|
     # Set box memory.
-    #vbox.customize ["modifyvm", :id, "--memory", "1792"]
     vbox.customize ["modifyvm", :id, "--memory", "1024"]
 
     # Change the network card hardware for better performance
@@ -32,9 +31,6 @@ Vagrant.configure(2) do |config|
     # VM network config.
     config.vm.network "forwarded_port", guest: 80, host: 8080
     config.vm.network "forwarded_port", guest: 443, host: 4433
-    #config.vm.network "private_network", ip: "192.168.50.4"
-
-    #config.ssh.insert_key = false
   end
 
   # Disable automatic box update checking. If you disable this, then
