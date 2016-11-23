@@ -1,7 +1,7 @@
 ---
 # The main playbook to install Ceres Fair Food on a server
 
-- hosts: vagrant
+- hosts: all
 
   roles:
     - role: geerlingguy.security
