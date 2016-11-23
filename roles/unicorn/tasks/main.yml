@@ -11,13 +11,17 @@
   become: yes
   with_items:
     - { src: "unicorn_init.j2", dest: "/etc/init.d/unicorn_{{ app }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
-    - { src: "unicorn.service.j2", dest: "/etc/systemd/system/unicorn_{{ app }}.service", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
     - { src: "unicorn.rb.j2", dest: "{{ unicorn_config }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
   notify:
     - restart nginx
 
-- name: update unicorn
-  service:
-    name=unicorn_{{ app }}
-    enabled=yes
+- name: enable unicorn at boot
+  # The service module fails trying to use systemd commands for initV scripts.
+  # So we do it manually.
+  #service:
+  #  name=unicorn_{{ app }}
+  #  enabled=yes
+  command: "update-rc.d unicorn_{{ app }} defaults"
+  args:
+    creates: "/etc/rc3.d/S02unicorn_{{ app }}"
   become: yes
