@@ -19,10 +19,9 @@ rbenv:
   ruby_version: 1.9.3-p551
 
 #domain: "members.ceresfairfood.org.au"
-domain: "localhost"
+domain: "{{ inventory_hostname }}"
 
 https: false
-use_letsencrypt_bla: false
 
 rails_env: "staging"
 
@@ -119,7 +118,7 @@ nginx_sites_available:
       listen 443 ssl deferred;
       listen [::]:443 ssl deferred;
       server_name {{ domain }};
-      root {{ app_root }}/public;
+      root "{{ current_path }}/public";
 
       ssl_certificate      /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
       ssl_certificate_key  /etc/letsencrypt/live/{{ domain }}/privkey.pem;
