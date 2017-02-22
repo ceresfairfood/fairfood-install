@@ -37,7 +37,7 @@ upgrade_application() {
 	
         # TODO: make schedule server agnostic
 	# install required cron jobs
-	#bundle exec whenever --set 'environment=production' --update-crontab members.ceresfairfood.org.au
+	#bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab members.ceresfairfood.org.au
 	
 	# Restart DJ workers
 	./script/delayed_job restart
