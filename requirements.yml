@@ -1,7 +1,7 @@
 ---
 # These have been used with Ansible 2.3.0
 - src: zzet.rbenv
-  version: 2.2.6
+  version: 3.3.6
 - src: geerlingguy.security
   version: 1.4.0
 - src: jdauphant.nginx

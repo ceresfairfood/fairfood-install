@@ -13,7 +13,9 @@
       rbenv:
         env: user
         version: v0.4.0
-        ruby_version: 1.9.3-p551
+        default_ruby: 1.9.3-p551
+        rubies:
+          - version: 1.9.3-p551
       rbenv_owner: "{{ app_user }}"
       rbenv_group: "{{ app_user }}"
       rbenv_users:
