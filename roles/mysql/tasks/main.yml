@@ -9,7 +9,13 @@
   with_items:
     - mysql-server
     - python-mysqldb # required by Ansible mysql_db
-    - libmysqlclient-dev # required by mysql2 gem
+    - default-libmysqlclient-dev # required by mysql2 gem
+
+- name: Ensure that service is started and enabled
+  service:
+    name: mysql
+    state: started
+    enabled: yes
 
 - name: Create production database
   mysql_db:
