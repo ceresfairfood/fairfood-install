@@ -6,7 +6,7 @@
 
 ```sh
 vagrant up
-ansible-playbook -i vagrant local.yml
+ansible-playbook -i hosts -l vagrant site.yml
 ```
 
 ## Community Roles
