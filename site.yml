@@ -4,9 +4,6 @@
 - hosts: all
 
   roles:
-    - role: geerlingguy.security
-      become: yes
-
     - role: app-user
 
     - role: zzet.rbenv

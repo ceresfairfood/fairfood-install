@@ -2,8 +2,6 @@
 # These have been used with Ansible 2.3.0
 - src: zzet.rbenv
   version: 3.3.6
-- src: geerlingguy.security
-  version: 1.4.0
 - src: jdauphant.nginx
   version: v2.3.1
 - src: thefinn93.letsencrypt
