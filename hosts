@@ -10,5 +10,6 @@ staging.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.o
 
 ## The current production server is not managed via Ansible yet
 #
-#[production]
+[production]
 #members.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
+prod2.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
