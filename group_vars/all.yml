@@ -13,11 +13,6 @@ log_path: "{{ current_path }}/log"
 pid_path: "{{ current_path }}/tmp/pids"
 sock_path: "{{ current_path }}/tmp/socks"
 
-rbenv:
-  env: user
-  version: v0.4.0
-  ruby_version: 1.9.3-p551
-
 #domain: "members.ceresfairfood.org.au"
 domain: "{{ inventory_hostname }}"
 
