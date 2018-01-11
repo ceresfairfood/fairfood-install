@@ -12,4 +12,4 @@ staging.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.o
 #
 [production]
 #members.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
-prod2.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
+prod2.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au rails_env=production
