@@ -6,13 +6,6 @@
     user: "{{ app_user }}"
     key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
-- name: Install bundler
-  # This needs to be run inside a bash shell to initialise rbenv
-  # See http://stackoverflow.com/questions/22115936/install-bundler-gem-using-ansible
-  command: bash -lc "gem install bundler --no-ri --no-rdoc"
-  args:
-    creates: "{{ ansible_env.HOME }}/.rbenv/shims/bundler"
-
 - name: Create directory for Git repository
   file:
     path: "{{ build_path }}"
