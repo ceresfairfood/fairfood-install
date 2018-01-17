@@ -36,6 +36,7 @@
 
     - role: thefinn93.letsencrypt
       become: yes
+      letsencrypt_webroot_path: /etc/letsencrypt/webrootauth
       letsencrypt_email: "{{ developer_email }}"
       letsencrypt_cert_domains:
         - "{{ domain }}"
