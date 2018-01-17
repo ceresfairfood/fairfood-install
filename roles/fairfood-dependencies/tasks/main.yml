@@ -1,5 +1,16 @@
 ---
 
+- name: Remove conflicting system dependencies of the fairfood application
+  apt:
+    pkg: "{{ item }}"
+    state: "absent"
+  become: yes
+  with_items:
+    - apache2
+    - apache2-bin
+    - apache2-utils
+    - libapache2-mod-php
+
 - name: Install system dependencies of the fairfood application
   apt:
     pkg: "{{ item }}"

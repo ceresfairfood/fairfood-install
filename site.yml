@@ -4,6 +4,9 @@
 - hosts: all
 
   roles:
+    - role: fairfood-dependencies
+      become: yes
+
     - role: app-user
 
     - role: rbenv
@@ -38,9 +41,6 @@
         - "{{ domain }}"
       letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
       when: https
-
-    - role: fairfood-dependencies
-      become: yes
 
     - role: fairfood
       become: yes
