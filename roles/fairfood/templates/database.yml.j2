@@ -4,8 +4,8 @@ staging:
   reconnect: false
   database: {{ db_name }}
   pool: 5
-  username: root
-  password: 
+  username: {{ db_user }}
+  password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
   host: localhost
 
 production:
@@ -14,6 +14,6 @@ production:
   reconnect: false
   database: {{ db_name }}
   pool: 5
-  username: root
-  password:
+  username: {{ db_user }}
+  password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
   host: localhost

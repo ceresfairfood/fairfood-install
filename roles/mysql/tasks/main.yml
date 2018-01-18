@@ -35,10 +35,14 @@
     state: import
     target: "/tmp/fairfood-init.sql"
   when: db_created.changed
-  
+
 #- name: remove all anonymous user accounts
 #  mysql_user: name='' host_all=yes state=absent
 #  become: yes
 
-#- name: create db user
-#  mysql_user: name=bob password=12345 priv=ceres_prod.*:ALL state=present
+- name: create db user
+  mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
+    priv: "{{ db_name }}.*:ALL"
+    state: present
