@@ -23,6 +23,7 @@
   copy:
     content: 4b825dc642cb6eb9a060e54bf8d69288fbee4904
     dest: "{{ build_path }}/.git/HEAD"
+    force: no
 
 - name: Create required directories
   file:
@@ -31,6 +32,7 @@
     recurse: true
   with_items:
     - "{{ config_path }}"
+    - "{{ pid_path }}"
     - "{{ sock_path }}"
 
 - name: Install configuration files
