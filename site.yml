@@ -12,6 +12,9 @@
     - role: rbenv
       ruby_version: 1.9.3-p551
 
+    - role: mail
+      become: yes
+
     - role: mysql
       become: yes
 
