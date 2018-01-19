@@ -1,0 +1,8 @@
+---
+language: python
+
+install:
+  - pip install ansible-lint
+
+script:
+  - ansible-lint site.yml --exclude=roles/jdauphant.nginx --exclude=roles/thefinn93.letsencrypt --exclude=roles/fairfood/tasks/main.yml --exclude=roles/mysql/tasks/main.yml
