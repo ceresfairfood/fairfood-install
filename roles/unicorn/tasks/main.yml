@@ -16,12 +16,7 @@
     - restart nginx
 
 - name: enable unicorn at boot
-  # The service module fails trying to use systemd commands for initV scripts.
-  # So we do it manually.
-  #service:
-  #  name=unicorn_{{ app }}
-  #  enabled=yes
-  command: "update-rc.d unicorn_{{ app }} defaults"
-  args:
-    creates: "/etc/rc3.d/S02unicorn_{{ app }}"
+  service:
+    name=unicorn_{{ app }}
+    enabled=yes
   become: yes
