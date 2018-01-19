@@ -4,6 +4,9 @@
 - hosts: all
 
   roles:
+    - role: admin-users
+      become: yes
+
     - role: fairfood-dependencies
       become: yes
 

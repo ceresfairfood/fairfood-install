@@ -1,0 +1,57 @@
+---
+# Create the admin users and configure SSH more securely.
+# Execute this role as root
+
+- name: Create admin users
+  user:
+    name: "{{ item | basename | splitext | first }}"
+    state: present
+    append: yes
+    groups: sudo
+    shell: /bin/bash
+    # Password login is disabled by default.
+    # Set a user's password after SSH has been configured for key authentication
+    # only. After setting a password, the user can use `sudo` with that password.
+    #
+    # If you want to set a default password, use `mkpasswd --method=sha-512`.
+    # But be aware that this repository is public and the password below is
+    # probably compromised.
+    #password: $6$I.AOSzkX0oS4GpV$MLCQ2I9REZImaaKIG54XjYjonYSqzfwW5//WEjYwqtsMTnaf3dC7Ymye5kzwPLXoTMWvDMgH96jc5GIqqtgOx.
+    #update_password: on_create
+  with_fileglob:
+    - "files/admin-ssh-keys/*.pub"
+
+- name: Authorise their SSH keys
+  authorized_key:
+    user: "{{ item | basename | splitext | first }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_fileglob:
+    - "files/admin-ssh-keys/*.pub"
+
+- name: Disable SSH password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: Reload ssh
+
+- name: Disable SSH PAM authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^UsePAM"
+    line: "UsePAM no"
+    state: present
+  notify: Reload ssh
+
+# Don't do this unless you have another login with sudo rights.
+# After running the above, you need to set your user's password.
+
+#- name: Disable SSH root login
+#  lineinfile:
+#    dest: /etc/ssh/sshd_config
+#    regexp: "^PermitRootLogin"
+#    line: "PermitRootLogin no"
+#    state: present
+#  notify: Reload ssh
