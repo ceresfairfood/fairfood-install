@@ -1,5 +1,9 @@
 ---
 
+- name: Set timezone for cron jobs using local time
+  timezone:
+    name: Australia/Melbourne
+
 - name: Remove conflicting system dependencies of the fairfood application
   apt:
     pkg: "{{ item }}"
