@@ -12,11 +12,11 @@ set -e
 
 # Feel free to change any of the following variables for your app:
 TIMEOUT=${TIMEOUT-60}
-APP_ROOT={{ current_path }}
-PID={{ unicorn_pid }}
-CMD="bash -l -c 'cd {{ current_path }}; bundle exec unicorn -D -c {{ unicorn_config }} -E {{ rails_env }}'"
-USER={{ unicorn_user }}
-PATH="/home/$USER/.rbenv/shims:/home/$USER/.rbenv/bin:$PATH"
+APP_ROOT="{{ current_path }}"
+PID="{{ unicorn_pid }}"
+CMD="bash -l -c 'cd {{ current_path }}; bundle exec unicorn_rails -D -c {{ unicorn_config }} -E {{ rails_env }}'"
+USER="{{ unicorn_user }}"
+PATH="{{ app_user_home }}/.rbenv/shims:{{ app_user_home }}/.rbenv/bin:$PATH"
 set -u
 
 OLD_PIN="$PID.oldbin"
