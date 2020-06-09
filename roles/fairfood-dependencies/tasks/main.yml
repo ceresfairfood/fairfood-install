@@ -6,14 +6,13 @@
 
 - name: Remove conflicting system dependencies of the fairfood application
   apt:
-    pkg: "{{ item }}"
-    state: "absent"
-  become: yes
-  with_items:
+    pkg:
     - apache2
     - apache2-bin
     - apache2-utils
     - libapache2-mod-php
+    state: "absent"
+  become: yes
 
 - name: Install Ansible dependencies
   apt:
@@ -23,10 +22,9 @@
 
 - name: Install system dependencies of the fairfood application
   apt:
-    pkg: "{{ item }}"
-    state: "present"
-  become: yes
-  with_items:
+    pkg:
     - git
     - imagemagick
     - memcached
+    state: "present"
+  become: yes

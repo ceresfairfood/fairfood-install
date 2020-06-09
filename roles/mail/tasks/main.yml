@@ -4,10 +4,8 @@
 
 - name: install mail packages
   apt:
-    pkg: "{{ item }}"
+    pkg: "mailutils"
     state: present
-  with_items:
-    - mailutils
 
 - name: configure receiving locally only
   lineinfile:

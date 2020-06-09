@@ -2,18 +2,19 @@
 # Install rbenv and the need ruby version
 
 - name: install build depends
-  apt: pkg={{ item }} state=present install_recommends=no
-  with_items:
-  - build-essential
-  - git
-  - libcurl4-openssl-dev
-  - libffi-dev
-  - libreadline-dev
-  - libssl1.0-dev
-  - libxml2-dev
-  - libxslt1-dev
-  - libyaml-dev
-  - zlib1g-dev
+  apt:
+    pkg:
+    - build-essential
+    - git
+    - libcurl4-openssl-dev
+    - libffi-dev
+    - libreadline-dev
+    - libssl1.0-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - libyaml-dev
+    - zlib1g-dev
+    state: present
   become: yes
 
 - name: checkout rbenv repo
