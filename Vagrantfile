@@ -14,7 +14,16 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "debian/stretch64"
 
-  # Custom Virtualbox configuration
+  # VM network config.
+  config.vm.network "forwarded_port", guest: 22, host: 2222
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 443, host: 4433
+
+  config.vm.provider :libvirt do |box|
+    box.memory = 1024
+    box.nic_model_type = "virtio"
+  end
+
   config.vm.provider :virtualbox do |vbox|
     # Set box memory.
     vbox.customize ["modifyvm", :id, "--memory", "1024"]
@@ -22,15 +31,6 @@ Vagrant.configure(2) do |config|
     # Change the network card hardware for better performance
     # see https://www.virtualbox.org/manual/ch06.html#nichardware
     vbox.customize [ "modifyvm", :id, "--nictype1", "virtio" ]
-
-    # Suggested fix for slow network performance, doubled speed on my machine
-    # see https://github.com/mitchellh/vagrant/issues/1807
-    vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    vbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-
-    # VM network config.
-    config.vm.network "forwarded_port", guest: 80, host: 8080
-    config.vm.network "forwarded_port", guest: 443, host: 4433
   end
 
   # Disable automatic box update checking. If you disable this, then
