@@ -15,6 +15,12 @@
     - apache2-utils
     - libapache2-mod-php
 
+- name: Install Ansible dependencies
+  apt:
+    pkg: "acl"
+    state: "present"
+  become: yes
+
 - name: Install system dependencies of the fairfood application
   apt:
     pkg: "{{ item }}"
