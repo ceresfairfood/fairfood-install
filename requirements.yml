@@ -1,6 +1,6 @@
 ---
 # These have been used with Ansible 2.3.0
 - src: jdauphant.nginx
-  version: v2.3.1
+  version: v2.21.2
 - src: thefinn93.letsencrypt
   # version: master
