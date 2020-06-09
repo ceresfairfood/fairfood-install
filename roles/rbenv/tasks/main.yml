@@ -36,7 +36,6 @@
   git: >
     repo="https://github.com/rbenv/ruby-build.git"
     dest="~/.rbenv//plugins/ruby-build"
-    version=v20171226
     accept_hostkey=yes
     force=yes
   become: yes
@@ -61,9 +60,8 @@
   become_user: "{{ app_user }}"
 
 - name: install ruby
-  command: bash -lc "rbenv install --skip-existing --patch {{ ruby_version }}"
+  command: bash -lc "rbenv install --skip-existing {{ ruby_version }}"
   args:
-    stdin: "{{ lookup('file', 'ruby-debian-openssl.patch') }}"
     creates: "~/.rbenv/versions/{{ ruby_version }}"
   become: yes
   become_user: "{{ app_user }}"
