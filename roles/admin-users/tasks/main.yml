@@ -37,14 +37,6 @@
     state: present
   notify: Reload ssh
 
-- name: Disable SSH PAM authentication
-  lineinfile:
-    dest: /etc/ssh/sshd_config
-    regexp: "^UsePAM"
-    line: "UsePAM no"
-    state: present
-  notify: Reload ssh
-
 # Don't do this unless you have another login with sudo rights.
 # After running the above, you need to set your user's password.
 
