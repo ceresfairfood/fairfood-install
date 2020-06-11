@@ -4,7 +4,9 @@
 
 - name: install mail packages
   apt:
-    pkg: "mailutils"
+    pkg:
+    - mailutils
+    - postfix
     state: present
 
 - name: configure receiving locally only
