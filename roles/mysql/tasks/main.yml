@@ -45,3 +45,11 @@
     password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
     priv: "{{ db_name }}.*:ALL"
     state: present
+
+- name: Install database access config
+  template:
+    src: "my.cnf"
+    dest: "{{ app_user_home }}/.my.cnf"
+    mode: 0600
+  become: yes
+  become_user: "{{ app_user }}"
