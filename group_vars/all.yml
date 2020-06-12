@@ -24,7 +24,12 @@ rails_env: "staging"
 # Database variables
 db_user: "fairfood"
 db_name: "fairfood_production"
-mysql_data_file: "fairfood_2016-09-21-empty.sql"
+# Created with:
+#
+#   bundle exec rake db:drop db:create db:schema:load
+#   mysqldump ceres_dev > files/fairfood_schema.sql
+#
+mysql_data_file: "fairfood_schema.sql"
 
 #----------------------------------------------------------------------
 # Unicorn variables
