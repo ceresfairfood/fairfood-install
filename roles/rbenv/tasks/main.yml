@@ -58,11 +58,12 @@
   become_user: "{{ app_user }}"
 
 - name: install plugins for selected users
-  git: >
-    repo="https://github.com/rbenv/ruby-build.git"
-    dest="~/.rbenv//plugins/ruby-build"
-    accept_hostkey=yes
-    force=yes
+  git:
+    repo: "https://github.com/rbenv/ruby-build.git"
+    dest: "~/.rbenv//plugins/ruby-build"
+    version: "master"
+    accept_hostkey: yes
+    force: yes
   become: yes
   become_user: "{{ app_user }}"
 
