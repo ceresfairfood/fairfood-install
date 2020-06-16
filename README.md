@@ -37,6 +37,24 @@ ansible-lint site.yml\
  --exclude=roles/jdauphant.nginx
 ```
 
+## Setting up a new staging server
+
+Add the new server to the `hosts` file. Then run:
+
+```
+ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root
+ssh members.ceresfairfood.org.au@staging2.ceresfairfood.org.au -A
+$ ssh staging.ceresfairfood.org.au "mysqldump -u root fairfood_production | gzip" > old_server.sql.gz
+$ zcat old_server.sql.gz | mysql fairfood_production
+
+# Update the domain, then:
+ssh root@staging2.ceresfairfood.org.au
+$ # Add server name to nginx config.
+$ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --expand --renew-hook 'systemctl reload nginx'
+
+# Disable root login.
+```
+
 ## Switching servers
 
 We experienced a few issues moving to a new server.
