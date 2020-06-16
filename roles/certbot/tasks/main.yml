@@ -1,0 +1,15 @@
+---
+
+- name: Install certbot packages
+  apt:
+    pkg:
+    - certbot
+    - python-certbot-nginx
+    state: "present"
+
+- name: Obtain certificate
+  command: >
+    certbot certonly --nginx --email "{{ developer_email }}"
+    --agree-tos -d "{{ domain }}" --renew-hook "systemctl reload nginx"
+  args:
+    creates: "/etc/letsencrypt/live/{{ domain }}"

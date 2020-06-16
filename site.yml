@@ -24,6 +24,10 @@
     - role: unicorn
       become: yes
 
+    - role: certbot
+      become: yes
+      when: https |bool
+
     - role: jdauphant.nginx
       vars:
         nginx_sites:
@@ -38,15 +42,6 @@
           fairfood_http: "{{ nginx_sites_available.fairfood_http_to_https_redirect }}"
           fairfood_https: "{{ nginx_sites_available.fairfood_https }}"
       become: yes
-      when: https |bool
-
-    - role: thefinn93.letsencrypt
-      become: yes
-      letsencrypt_webroot_path: /etc/letsencrypt/webrootauth
-      letsencrypt_email: "{{ developer_email }}"
-      letsencrypt_cert_domains:
-        - "{{ domain }}"
-      letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
       when: https |bool
 
     - role: fairfood

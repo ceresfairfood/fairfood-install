@@ -34,8 +34,7 @@ After you changed code, it's nice to see if it's aligned with standards:
 ```sh
 # pip install ansible-lint
 ansible-lint site.yml\
- --exclude=roles/jdauphant.nginx\
- --exclude=roles/thefinn93.letsencrypt
+ --exclude=roles/jdauphant.nginx
 ```
 
 ## Switching servers
