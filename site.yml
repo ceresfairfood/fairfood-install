@@ -38,7 +38,7 @@
           fairfood_http: "{{ nginx_sites_available.fairfood_http_to_https_redirect }}"
           fairfood_https: "{{ nginx_sites_available.fairfood_https }}"
       become: yes
-      when: https
+      when: https |bool
 
     - role: thefinn93.letsencrypt
       become: yes
@@ -47,7 +47,7 @@
       letsencrypt_cert_domains:
         - "{{ domain }}"
       letsencrypt_renewal_command_args: '--renew-hook "systemctl restart nginx"'
-      when: https
+      when: https |bool
 
     - role: fairfood
       become: yes
