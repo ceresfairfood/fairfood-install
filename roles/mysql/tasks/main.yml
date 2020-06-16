@@ -5,9 +5,8 @@
 - name: install mysql packages
   apt:
     pkg:
-    - mysql-server
+    - mariadb-server
     - python-mysqldb # required by Ansible mysql_db
-    - default-libmysqlclient-dev # required by mysql2 gem
     state: present
 
 - name: Ensure that service is started and enabled

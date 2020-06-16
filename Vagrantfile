@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "debian/stretch64"
+  config.vm.box = "debian/buster64"
 
   # VM network config.
   config.vm.network "forwarded_port", guest: 22, host: 2222
@@ -20,13 +20,13 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 443, host: 4433
 
   config.vm.provider :libvirt do |box|
-    box.memory = 1024
+    box.memory = 1536
     box.nic_model_type = "virtio"
   end
 
   config.vm.provider :virtualbox do |vbox|
     # Set box memory.
-    vbox.customize ["modifyvm", :id, "--memory", "1024"]
+    vbox.customize ["modifyvm", :id, "--memory", "1536"]
 
     # Change the network card hardware for better performance
     # see https://www.virtualbox.org/manual/ch06.html#nichardware

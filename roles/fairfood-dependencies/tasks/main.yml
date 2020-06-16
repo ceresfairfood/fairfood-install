@@ -26,5 +26,7 @@
     - git
     - imagemagick
     - memcached
+    # For the mysql2 gem version 0.3
+    - libmariadbclient-dev
     state: "present"
   become: yes

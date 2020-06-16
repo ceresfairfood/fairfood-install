@@ -9,13 +9,38 @@
     - libcurl4-openssl-dev
     - libffi-dev
     - libreadline-dev
-    - libssl1.0-dev
     - libxml2-dev
     - libxslt1-dev
     - libyaml-dev
     - zlib1g-dev
     state: present
   become: yes
+
+# Our Ruby version needs the old libssl1.0-dev.
+# Ubuntu provides the package. The repository has to be added after installing
+# build-essential or the dependency resolution fails.
+#
+# If you end up in a conflicting state, remove the repository and update the
+# apt cache.
+- name: Download key for old libssl
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 3B4FE6ACC0B21F32
+  become: yes
+
+- name: Add Ubuntu repository for old libssl
+  apt_repository:
+    repo: "deb http://security.ubuntu.com/ubuntu bionic-security main"
+    state: present
+  become: yes
+
+- name: install old libssl
+  apt:
+    pkg:
+    - libssl1.0-dev
+    state: present
+  become: yes
+
 
 - name: checkout rbenv repo
   git:
