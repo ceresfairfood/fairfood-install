@@ -1,0 +1,6 @@
+exclude_paths:
+  - ./roles/jdauphant.nginx/
+
+skip_list:
+  - 303 # git module doesn't support `init`
+  - 503 # database setup not in handlers

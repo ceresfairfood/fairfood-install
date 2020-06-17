@@ -33,8 +33,7 @@ ansible-galaxy install -p roles -r requirements.yml
 After you changed code, it's nice to see if it's aligned with standards:
 ```sh
 # pip install ansible-lint
-ansible-lint site.yml\
- --exclude=roles/jdauphant.nginx
+ansible-lint site.yml
 ```
 
 ## Setting up a new staging server
