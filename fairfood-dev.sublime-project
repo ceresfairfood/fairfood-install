@@ -1,0 +1,26 @@
+{
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"fairfood"
+			],
+			"path": "/"
+		},
+		{
+			"folder_exclude_patterns":
+			[
+				"tmp",
+				"vendor"
+			],
+			"path": "../fairfood"
+		}
+	],
+
+  // The number of spaces a tab is considered equal to
+  "tab_size": 2,
+
+  // Set to true to insert spaces when tab is pressed
+  "translate_tabs_to_spaces": true,
+}

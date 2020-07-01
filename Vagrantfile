@@ -16,8 +16,9 @@ Vagrant.configure(2) do |config|
 
   # VM network config.
   config.vm.network "forwarded_port", guest: 22, host: 2222
-  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 80, host: 8080 
   config.vm.network "forwarded_port", guest: 443, host: 4433
+  config.vm.network "forwarded_port", guest: 3000, host: 3030
 
   config.vm.provider :libvirt do |box|
     box.memory = 1536
@@ -56,7 +57,14 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  # config.vm.synced_folder ".", "/vagrant", rsync__auto: true, rsync__exclude: ['./fairfood']
+  # config.vm.synced_folder "../fairfood", "/vagrant_fairfood", rsync__auto: true, rsync__exclude: ['./tmp']
+
+  # Sync current folder for local development -- couldn't get this work, it seems mess things up
+  config.vm.synced_folder(
+    "../fairfood", "/srv/members.ceresfairfood.org.au/development", 
+    owner: "members.ceresfairfood.org.au", group: "members.ceresfairfood.org.au")
+
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

@@ -1,0 +1,978 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/Users/dcook/projects/fairfood/app/models/user.rb",
+			"settings":
+			{
+				"buffer_size": 21693,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "# PR notes\n\n## Changes made\n* db:migrate IncreaseCryptedPasswordLength to 128 for SCrypt\n* user.rb: transition_from_crypto_providers Sha1 to SCrypt\n\n## Deployment\n\nbundle exec rake db:migrate",
+			"settings":
+			{
+				"buffer_size": 191,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 2296 files for \"crypted_password\" (regex)\n\n/Users/dcook/projects/fairfood-dev//files/fairfood_schema.sql:\n 1658    `login` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,\n 1659    `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,\n 1660:   `crypted_password` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,\n 1661    `salt` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,\n 1662    `created_at` datetime DEFAULT NULL,\n\n/Users/dcook/projects/fairfood/db/schema.rb:\n  722      t.string   \"login\",                   :limit => 40\n  723      t.string   \"email\",                   :limit => 100\n  724:     t.string   \"crypted_password\",        :limit => 40\n  725      t.string   \"salt\",                    :limit => 40\n  726      t.datetime \"created_at\"\n\n/Users/dcook/projects/fairfood/db/migrate/20101025120000_initial.rb:\n  325        t.string   \"first_name\",                   :limit => 100\n  326        t.string   \"last_name\",                    :limit => 100\n  327:       t.string   \"crypted_password\",             :limit => 40\n  328        t.string   \"salt\",                         :limit => 40\n  329        t.datetime \"created_at\"\n\n/Users/dcook/projects/fairfood/lib/tasks/data.rake:\n   73      User.update_all('\n   74                      login = null,\n   75:                     crypted_password = \"4772f0e6e3742d2faba1dae1c9d3e2557eb3797c\",\n   76                      salt = \"YwczKbbyCaUkSpTwudtv\",\n   77                      persistence_token = \"token\",\n\n/Users/dcook/projects/fairfood/log/development.log:\n    <binary>\n\n/Users/dcook/projects/fairfood/log/test.log:\n    File too large, skipping\n\n10 matches across 5 files\n",
+			"settings":
+			{
+				"buffer_size": 1650,
+				"line_ending": "Unix",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "/Users/dcook/projects/fairfood/db/schema.rb",
+			"settings":
+			{
+				"buffer_size": 37262,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "class IncreaseCryptedPasswordLength < ActiveRecord::Migration\n  def up\n  \tchange_table :users do |t|\n  \t  t.change(:crypted_password, :string, limit: 128)\n  \tend\n  end\n\n  def down\n    change_table :users do |t|\n      t.change(:crypted_password, :string, limit: 40)\n    end\n  end\nend\n",
+			"file": "/Users/dcook/projects/fairfood/db/migrate/20200630013437_increase_crypted_password_length.rb",
+			"file_size": 283,
+			"file_write_time": 132379549978526640,
+			"settings":
+			{
+				"buffer_size": 283,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "6f385b4b6ac68a0371a00277c81ec9d39b77f42717465b34ab37cbc28d6a95393cb9a7680fc41e7a4fb7d4bc1ca4af210d3612322a6435288551ef48190e2124",
+			"settings":
+			{
+				"buffer_size": 128,
+				"line_ending": "Unix",
+				"name": "6f385b4b6ac68a0371a00277c81ec9d39b77f42717465b34ab"
+			}
+		},
+		{
+			"file": "/Users/dcook/projects/fairfood/spec/models/user_spec.rb",
+			"settings":
+			{
+				"buffer_size": 28394,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"chang",
+				"Git: Change Branch"
+			],
+			[
+				"stat",
+				"Git: Status"
+			],
+			[
+				"chan",
+				"Git: Change Branch"
+			],
+			[
+				"git che",
+				"Git: Change Branch"
+			],
+			[
+				"diff",
+				"Git: Diff Current File"
+			],
+			[
+				"y",
+				"Set Syntax: YAML"
+			],
+			[
+				"dif",
+				"Git: Diff Current File"
+			],
+			[
+				"checko",
+				"Git: Checkout Current File"
+			],
+			[
+				"git check",
+				"Git: Checkout Current File"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"theme",
+				"UI: Select Theme"
+			],
+			[
+				"the",
+				"UI: Select Color Scheme"
+			],
+			[
+				"color",
+				"UI: Select Color Scheme"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"blam",
+				"Sublime Merge: Blame File"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"packa inst",
+				"Package Control: Install Package"
+			],
+			[
+				"package packa",
+				"Package Control: Remove Package"
+			],
+			[
+				"pack in",
+				"Package Control: Install Package"
+			],
+			[
+				"key",
+				"Preferences: Key Bindings"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Install Package Control"
+			],
+			[
+				"package ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 434.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/dcook/projects/fairfood",
+		"/Users/dcook/projects/fairfood/app",
+		"/Users/dcook/projects/fairfood/app/models",
+		"/Users/dcook/projects/fairfood/db",
+		"/Users/dcook/projects/fairfood/db/migrate",
+		"/Users/dcook/projects/fairfood/spec",
+		"/Users/dcook/projects/fairfood/spec/controllers",
+		"/Users/dcook/projects/fairfood/spec/features",
+		"/Users/dcook/projects/fairfood/spec/models",
+		"/Users/dcook/projects/fairfood/spec/models/user",
+		"/Users/dcook/projects/fairfood/spec/support"
+	],
+	"file_history":
+	[
+		"/Users/dcook/projects/fairfood/README.markdown",
+		"/Users/dcook/projects/fairfood/spec/features/login_spec.rb",
+		"/Users/dcook/projects/fairfood/Gemfile",
+		"/Users/dcook/projects/fairfood/.ruby-version",
+		"/Users/dcook/projects/fairfood/script/install-firefox",
+		"/Users/dcook/projects/fairfood/.firefox-version",
+		"/Users/dcook/projects/fairfood/spec/support/firefox.rb",
+		"/Users/dcook/projects/fairfood/Gemfile.lock",
+		"/Users/dcook/projects/fairfood/.bash_aliases.sh",
+		"/Users/dcook/projects/fairfood/config/config.yml",
+		"/Users/dcook/projects/fairfood/app/controllers/admin/reports_controller.rb",
+		"/Users/dcook/projects/fairfood/app/reports/packing_delivery_run_report.rb",
+		"/Users/dcook/projects/fairfood/config/routes.rb",
+		"/Users/dcook/projects/fairfood/app/views/checkouts/_recurring_order_form.html.erb",
+		"/Users/dcook/projects/fairfood/app/views/checkouts/show.html.erb",
+		"/Users/dcook/projects/fairfood/app/views/help/payment_options.html.erb",
+		"/Users/dcook/projects/fairfood/app/views/help/recurring_order.html.erb",
+		"/Users/dcook/projects/fairfood/lib/tasks/data.rake",
+		"/Users/dcook/projects/fairfood/script/rspec-unit",
+		"/Users/dcook/projects/fairfood/Rakefile",
+		"/Users/dcook/projects/fairfood/spec/lib/tasks/misc_spec.rb",
+		"/Users/dcook/projects/fairfood/app/assets/javascripts/includes/layout.js.coffee",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/base/_colors.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/components/_add_to_cart.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/components/_product_display.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/components/_subscription_form.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/pages/_product_types_search.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/pages/_product_types_show.css.scss",
+		"/Users/dcook/projects/fairfood/app/assets/stylesheets/pages/_products_show.css.scss",
+		"/Users/dcook/projects/fairfood/app/controllers/help_controller.rb",
+		"/Users/dcook/projects/fairfood/app/helpers/products_helper.rb",
+		"/Users/dcook/projects/fairfood/app/models/cart.rb",
+		"/Users/dcook/projects/fairfood/spec/features/admin_delivery_destinations_spec.rb",
+		"/Users/dcook/projects/fairfood/app/views/products/_add_to_cart.html.erb",
+		"/Users/dcook/projects/fairfood/app/views/subscriptions/edit_multi.html.erb",
+		"/Users/dcook/projects/fairfood/app/views/subscriptions/new.html.erb",
+		"/Users/dcook/projects/fairfood/public/500.html",
+		"/Users/dcook/projects/fairfood-dev/fairfood-dev.sublime-project",
+		"/Users/dcook/projects/fairfood/app/views/help/standing_order.html.erb",
+		"/Users/dcook/projects/fairfood/spec/features/subscriptions_spec.rb",
+		"/Users/dcook/projects/fairfood/spec/features/cart_spec.rb",
+		"/Users/dcook/projects/fairfood/config/unicorn.rb",
+		"/Users/dcook/projects/fairfood-dev/roles/unicorn/templates/unicorn_init.j2",
+		"/Users/dcook/notes/reset-password.rb",
+		"/Users/dcook/projects/fairfood/script/deploy",
+		"/Users/dcook/projects/fairfood/config/database.yml",
+		"/Users/dcook/projects/fairfood-dev/Vagrantfile",
+		"/Users/dcook/projects/fairfood/config/config.local.yml",
+		"/Users/dcook/projects/fairfood/.gitignore",
+		"/Users/dcook/projects/fairfood/.bundle/config",
+		"/Users/dcook/.bundle/config",
+		"/Users/dcook/projects/fairfood/db/seeds.rb",
+		"/Users/dcook/projects/fairfood/config/database.yml.template",
+		"/Users/dcook/projects/fairfood/app/models/user.rb",
+		"/Users/dcook/projects/fairfood/.semaphore/semaphore.yml",
+		"/Users/dcook/projects/fairfood-dev/README.md",
+		"/Users/dcook/projects/fairfood/app/views/layouts/_top_navigation.html.erb",
+		"/Users/dcook/projects/fairfood-dev/requirements.yml",
+		"/Users/dcook/projects/fairfood-dev/hosts",
+		"/Users/dcook/projects/fairfood-dev/group_vars/all.yml",
+		"/Users/dcook/projects/fairfood-dev/roles/jdauphant.nginx/templates/nginx.conf.j2",
+		"/Users/dcook/projects/fairfood-install/fairfood/config/database.yml",
+		"/Users/dcook/projects/fairfood-install/site.yml",
+		"/Users/dcook/projects/fairfood-install/files/admin-ssh-keys/README.md",
+		"/Users/dcook/projects/fairfood-install/fairfood/README.markdown",
+		"/Users/dcook/projects/fairfood-install/Vagrantfile",
+		"/Users/dcook/projects/fairfood-install/credentials/127.0.0.1/mysqlpassword",
+		"/Users/dcook/projects/fairfood-install/fairfood/lib/tasks/remote.rake",
+		"/Users/dcook/projects/fairfood-install/README.md",
+		"/Users/dcook/projects/fairfood-install/files/admin-ssh-keys/david.pub",
+		"/Users/dcook/projects/fairfood-install/fairfood-dev.sublime-project",
+		"/Users/dcook/projects/fairfood-install/.gitignore",
+		"/Users/dcook/projects/fairfood-install/hosts",
+		"/Users/dcook/projects/fairfood-install/.vagrant/machines/default/virtualbox/private_key",
+		"/Users/dcook/system/global/config/colours.sh",
+		"/Users/dcook/system/nix/scripts/svn-color.sh",
+		"/Users/dcook/system/osx/config/osx.bash_profile",
+		"/Users/dcook/system/osx/install/init-prefs-osx.sh"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+			"",
+			"*.erb",
+			"",
+			"fairfood/*",
+			"fairfood",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"crypted_password",
+			"password",
+			"crypto_provider",
+			"authlog",
+			"selenium",
+			"list_id",
+			"r_api_key",
+			"packing_delivery_run_for_day",
+			"recurring.order",
+			"(standing",
+			"recurring.order",
+			"\\(recurring.order\\)",
+			"capabilities",
+			"firefox_binary_path",
+			"firefox",
+			"load_tasks",
+			"test",
+			"/500",
+			"500",
+			"500.html",
+			"STANDING(.)ORDER",
+			"standing(.)order",
+			"test",
+			"recurring",
+			"standing(.)order",
+			"standing.order",
+			"test",
+			"0",
+			"email",
+			"seeds",
+			"Admin user created.",
+			"\"$refname\" = \"refs/heads/master\"",
+			"post-receive",
+			"git/hooks/post-receive",
+			"/current/.git/hooks/post-receive",
+			"log",
+			"standing.order",
+			"standing_order_help",
+			"STANDING ORDER",
+			"install-firefox",
+			"standing.order",
+			"standing_order",
+			"maikel",
+			"rspec",
+			"rspec g",
+			"site_title",
+			"top-navigation__site-title",
+			"staging",
+			"rbenv-init",
+			"post-recieve",
+			"while read",
+			"refs/heads/",
+			"refs/heads/master",
+			"RAILS_ENV",
+			"db:create",
+			"create",
+			"sync",
+			"mysqlpassword",
+			"mysql",
+			"vagrant",
+			"key"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": true,
+		"regex": true,
+		"replace_history":
+		[
+			"(standing order)",
+			"RECURRING$1ORDER",
+			"recurring$1order"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/Users/dcook/projects/fairfood/app/models/user.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21693,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								639,
+								587
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 191,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								84,
+								84
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1650,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										261,
+										277
+									],
+									[
+										634,
+										650
+									],
+									[
+										1005,
+										1021
+									],
+									[
+										1305,
+										1321
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								640,
+								640
+							]
+						],
+						"settings":
+						{
+							"detect_indentation": false,
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ \t].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/dcook/projects/fairfood/db/schema.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 37262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								33621,
+								33623
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 10407.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/dcook/projects/fairfood/db/migrate/20200630013437_increase_crypted_password_length.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 283,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6,
+								35
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 128,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								128
+							]
+						],
+						"settings":
+						{
+							"auto_name": "6f385b4b6ac68a0371a00277c81ec9d39b77f42717465b34ab",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/Users/dcook/projects/fairfood/spec/models/user_spec.rb",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 28394,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17950,
+								17950
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5370.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 108.0
+	},
+	"pinned_build_system": "",
+	"project": "fairfood-dev.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"increase ",
+				"fairfood/db/migrate/20200630013437_increase_crypted_password_length.rb"
+			],
+			[
+				"read",
+				"fairfood/README.markdown"
+			],
+			[
+				"spec log",
+				"fairfood/spec/features/login_spec.rb"
+			],
+			[
+				"gem",
+				"fairfood/Gemfile.lock"
+			],
+			[
+				"ruby-ver",
+				"fairfood/.ruby-version"
+			],
+			[
+				"gemf",
+				"fairfood/Gemfile"
+			],
+			[
+				"spec/support/firefox.rb",
+				"fairfood/spec/support/firefox.rb"
+			],
+			[
+				"firefox",
+				"fairfood/script/install-firefox"
+			],
+			[
+				"firefo",
+				"fairfood/.firefox-version"
+			],
+			[
+				"config/confi",
+				"fairfood/config/config.yml"
+			],
+			[
+				"rout",
+				"fairfood/config/routes.rb"
+			],
+			[
+				"packing deli",
+				"fairfood/app/reports/packing_delivery_run_report.rb"
+			],
+			[
+				"recurring order",
+				"fairfood/app/views/checkouts/_recurring_order_form.html.erb"
+			],
+			[
+				"script/install-firefox",
+				"fairfood/script/install-firefox"
+			],
+			[
+				"firefox ver",
+				"fairfood/.firefox-version"
+			],
+			[
+				"readm",
+				"fairfood/README.markdown"
+			],
+			[
+				"lib/tasks/ .rake",
+				"fairfood/lib/tasks/data.rake"
+			],
+			[
+				"rake",
+				"fairfood/Rakefile"
+			],
+			[
+				"rpect uni",
+				"fairfood/script/rspec-unit"
+			],
+			[
+				"rea",
+				"fairfood/README.markdown"
+			],
+			[
+				"gemfile.l",
+				"fairfood/Gemfile.lock"
+			],
+			[
+				"gemfil",
+				"fairfood/Gemfile"
+			],
+			[
+				"500.",
+				"fairfood/public/500.html"
+			],
+			[
+				"app/models/cart.rb",
+				"fairfood/app/models/cart.rb"
+			],
+			[
+				"standing",
+				"fairfood/app/views/checkouts/_standing_order_form.html.erb"
+			],
+			[
+				"giti",
+				"fairfood/.gitignore"
+			],
+			[
+				"config datab",
+				"fairfood/config/database.yml"
+			],
+			[
+				"vagra",
+				"fairfood-dev/Vagrantfile"
+			],
+			[
+				"config/data",
+				"fairfood/config/database.yml"
+			],
+			[
+				"user.",
+				"fairfood/app/models/user.rb"
+			],
+			[
+				"va",
+				"fairfood-dev/Vagrantfile"
+			],
+			[
+				"deploy",
+				"fairfood/script/deploy"
+			],
+			[
+				"database.y",
+				"fairfood/config/database.yml"
+			],
+			[
+				"user",
+				"fairfood/app/models/user.rb"
+			],
+			[
+				"config database",
+				"fairfood/config/database.yml.template"
+			],
+			[
+				"lib tasks",
+				"fairfood/lib/tasks/data.rake"
+			],
+			[
+				"unicorn",
+				"fairfood/config/unicorn.rb"
+			],
+			[
+				"unico",
+				"fairfood-dev/roles/unicorn/templates/unicorn_init.j2"
+			],
+			[
+				"config/config.yml",
+				"fairfood/config/config.yml"
+			],
+			[
+				"standing_order",
+				"fairfood/app/views/help/standing_order.html.erb"
+			],
+			[
+				"config/routes.rb",
+				"fairfood/config/routes.rb"
+			],
+			[
+				"layout.js.coffee",
+				"fairfood/app/assets/javascripts/includes/layout.js.coffee"
+			],
+			[
+				"payment_options.html.erb",
+				"fairfood/app/views/help/payment_options.html.erb"
+			],
+			[
+				"config.yml",
+				"fairfood/config/database.yml.template"
+			],
+			[
+				"standing order",
+				"fairfood/app/views/help/standing_order.html.erb"
+			],
+			[
+				"requirm",
+				"fairfood-dev/requirements.yml"
+			],
+			[
+				"vagran",
+				"fairfood-dev/Vagrantfile"
+			],
+			[
+				"unicor",
+				"fairfood-dev/roles/unicorn/templates/unicorn_init.j2"
+			],
+			[
+				"nginx",
+				"fairfood-dev/roles/jdauphant.nginx/templates/nginx.conf.j2"
+			],
+			[
+				"files/admin",
+				"fairfood-install/files/admin-ssh-keys/README.md"
+			],
+			[
+				"readme",
+				"fairfood/README.markdown"
+			],
+			[
+				"site.y",
+				"fairfood-install/site.yml"
+			],
+			[
+				"mys",
+				"fairfood-install/credentials/127.0.0.1/mysqlpassword"
+			],
+			[
+				"database.yml",
+				"fairfood/config/database.yml"
+			],
+			[
+				"igno",
+				".gitignore"
+			],
+			[
+				"install bu",
+				"script/install-bundler"
+			],
+			[
+				"bash_pro",
+				"system/osx/config/osx.bash_profile"
+			],
+			[
+				"init",
+				"global/install/init-prefs.sh"
+			],
+			[
+				".bash al",
+				"global/config/.bash_aliases"
+			],
+			[
+				"colour",
+				"global/config/colours.sh"
+			],
+			[
+				"nix scripts",
+				"nix/scripts/svn-color.sh"
+			],
+			[
+				"osx prof",
+				"osx/config/osx.bash_profile"
+			],
+			[
+				"bash alias",
+				"global/config/.bash_aliases"
+			],
+			[
+				"profil",
+				"global/config/.bash_profile"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 304.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
