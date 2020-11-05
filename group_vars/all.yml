@@ -131,6 +131,12 @@ nginx_sites_available:
       gzip_disable "msie6";
 
       try_files $uri/index.html $uri @unicorn;
+
+      # Block scanning for scripts efficiently.
+      location ~ \.php$ {
+        return 404;
+      }
+
       location @unicorn {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
