@@ -1,6 +1,7 @@
 # fairfood-install
 
-[Ansible](http://docs.ansible.com/ansible/) scripts to install Ceres Fair Food on a server
+[Ansible](http://docs.ansible.com/ansible/) scripts to install Ceres Fair Food on a server.
+This is not intended to be re-run on a production server, as there may be new config changes on the server that aren't yet stored here.
 
 ## Requirements
 
