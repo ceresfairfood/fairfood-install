@@ -4,6 +4,9 @@ app: "{{ app_name }}"
 app_user: "members.ceresfairfood.org.au"
 app_user_home: "/srv/{{ app_user }}"
 
+metabase_username: "metabase"
+metabase_user_home: "/home/{{ metabase_username }}"
+
 app_root: "{{ app_user_home }}"
 current_path: "{{ app_root }}/current"
 config_path: "{{ current_path }}/config"
@@ -15,6 +18,7 @@ sock_path: "{{ current_path }}/tmp/socks"
 
 #domain: "members.ceresfairfood.org.au"
 domain: "{{ inventory_hostname }}"
+metabase_domain: "metabase.ceresfairfood.org.au"
 
 https: false
 
@@ -30,6 +34,11 @@ db_name: "fairfood_production"
 #   mysqldump ceres_dev > files/fairfood_schema.sql
 #
 mysql_data_file: "fairfood_schema.sql"
+
+# Metabase query database
+metabase_db_user: "metabase"
+metabase_db_name: "fairfood_metabase"
+metabase_data_file: "fairfood_schema.sql"
 
 #----------------------------------------------------------------------
 # Unicorn variables
@@ -154,6 +163,59 @@ nginx_sites_available:
       error_page 500 502 503 504 /500.html;
       client_max_body_size 4G;
       keepalive_timeout 60;
+
+  # Metabase
+  metabase_http_to_https_redirect:
+    - |
+      listen 80;
+      # listen [::]80; ## This doesn't work, I forget why
+      server_name {{ metabase_domain }};
+
+      add_header X-Content-Type-Options nosniff;
+      add_header X-Xss-Protection "1; mode=block";
+      add_header X-Frame-Options DENY;
+      #add_header Content-Security-Policy "default-src self";
+
+      location / {
+        return 301 https://$server_name$request_uri;
+      }
+  metabase_https:
+    - |
+      listen 443 ssl;
+      # listen [::]:443 ssl;
+      server_name {{ metabase_domain }};
+
+      ssl_certificate      /etc/letsencrypt/live/{{ metabase_domain }}/fullchain.pem;
+      ssl_certificate_key  /etc/letsencrypt/live/{{ metabase_domain }}/privkey.pem;
+
+      include /etc/letsencrypt/options-ssl-nginx.conf;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+      add_header X-Content-Type-Options nosniff;
+      add_header X-Xss-Protection "1; mode=block";
+      add_header X-Frame-Options DENY;
+      add_header Strict-Transport-Security "max-age=31536000";
+
+      gzip on;
+      gzip_disable "msie6";
+
+      # Metabase
+      location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_pass http://127.0.0.1:3000;
+      }
+
+      # Block scanning for scripts efficiently.
+      location ~ \.php$ {
+        return 404;
+      }
+
+      client_max_body_size 4G;
+      keepalive_timeout 60;
+
+
 
 nginx_events_params:
   - worker_connections 768

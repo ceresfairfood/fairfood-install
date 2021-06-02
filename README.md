@@ -55,6 +55,34 @@ $ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --exp
 # Disable root login.
 ```
 
+## Installing Metabase
+
+Using https://galaxy.ansible.com/libre_ops/metabase
+
+JDK is required, eg:
+
+```sh
+sudo apt update
+sudo apt install openjdk-11-jdk #(8 or later)
+```
+
+Use `metabase.yml` playbook, eg:
+```sh
+ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
+```
+
+Certificate was set up manually:
+```sh
+certbot certonly --nginx --email "maikel@openfoodnetwork.org.au" -d "metabase.ceresfairfood.org.au" --renew-hook "systemctl reload nginx"
+```
+
+Default login is example@example.com / metabase123
+
+Metabase config includes:
+
+1. Add MySQL database fairfood_metabase, user metabase, password (see `credentials/*/mysqlpassword`)
+2. Setup email to use localhost port 25, from metabase@metabase.ceresfairfood.org.au
+
 ## Switching servers
 
 We experienced a few issues moving to a new server.
