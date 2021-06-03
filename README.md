@@ -58,6 +58,9 @@ $ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --exp
 ## Installing Metabase
 
 Using https://galaxy.ansible.com/libre_ops/metabase
+You can refer to defaults: https://github.com/libre-ops/metabase/blob/master/defaults/main.yml
+
+Choose the latest version of Metabase by setting the variable in `all.yml`. 
 
 JDK is required, eg:
 

@@ -19,8 +19,8 @@
     - role: libre_ops.metabase
       become: yes
       vars:
+        # user and version are defined in all.yml
         use_own_database: false
-        metabase_user: "{{ metabase_username }}"
 
     - role: jdauphant.nginx
       vars:
