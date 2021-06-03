@@ -4,7 +4,8 @@ app: "{{ app_name }}"
 app_user: "members.ceresfairfood.org.au"
 app_user_home: "/srv/{{ app_user }}"
 
-metabase_username: "metabase"
+metabase_version: v0.39.3
+metabase_user: "metabase"
 metabase_user_home: "/home/{{ metabase_username }}"
 
 app_root: "{{ app_user_home }}"
