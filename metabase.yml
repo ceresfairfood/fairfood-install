@@ -1,0 +1,30 @@
+---
+# Installing Metabase for the staging server
+
+# Eg: ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
+
+# Certificate was set up manually:
+# certbot certonly --nginx --email "maikel@openfoodnetwork.org.au" -d "metabase.ceresfairfood.org.au" --renew-hook "systemctl reload nginx"
+
+- name: Install Metabase
+  hosts:
+    - vagrant
+    - vagrant-virtualbox
+    - staging
+
+  roles:
+    - role: mysql
+      become: yes
+
+    - role: libre_ops.metabase
+      become: yes
+      vars:
+        use_own_database: false
+        metabase_user: "{{ metabase_username }}"
+
+    - role: jdauphant.nginx
+      vars:
+        nginx_sites:
+          metabase_http: "{{ nginx_sites_available.metabase_http_to_https_redirect }}"
+          metabase_https: "{{ nginx_sites_available.metabase_https }}"
+      become: yes
