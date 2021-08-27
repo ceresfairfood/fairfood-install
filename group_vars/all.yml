@@ -1,3 +1,5 @@
+# Configuration for all the things.
+
 app_name: fairfood
 app: "{{ app_name }}"
 
@@ -216,7 +218,17 @@ nginx_sites_available:
       client_max_body_size 4G;
       keepalive_timeout 60;
 
+  # Status (for collectd-wormly)
+  nginx_status:
+    - |
+      listen 8081;
 
+      location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+      }
 
 nginx_events_params:
   - worker_connections 768

@@ -1,0 +1,17 @@
+---
+# Set up nginx_status for collectd-wormly
+# See collectd-wormly.readme.md
+
+- name: nginx_status for collectd-wormly
+  hosts:
+    - vagrant
+    - vagrant-virtualbox
+    - staging
+    - production # This was exected on prod but failed due to invalid config in fairfood_beta. Manually completed after disabling fairfood_beta.
+
+  roles:
+    - role: jdauphant.nginx
+      vars:
+        nginx_sites:
+          nginx_status: "{{ nginx_sites_available.nginx_status }}"
+      become: yes
