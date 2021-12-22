@@ -14,6 +14,10 @@ listen "{{ unicorn_sock }}", backlog: 128
 worker_processes {{ unicorn_workers }}
 timeout {{ unicorn_timeout }}
 
+# Check before processing each request, to ignore cancelled queued requests,
+# for example user refreshes multiple times
+check_client_connection true
+
 # save the worker pids to disk so we can monitor them
 after_fork do |server, worker|
   worker_pid = "{{ pid_path }}/unicorn.#{worker.nr}.pid"
