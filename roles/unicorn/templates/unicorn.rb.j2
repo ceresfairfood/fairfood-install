@@ -1,14 +1,22 @@
-
-# unicorn_rails -c config/unicorn.rb -E production -D
+# Pass this config file to unicorn:
+#
+#   ./script/unicorn -c ../unicorn.rb -E production -D
 
 working_directory "{{ current_path }}"
 pid "{{ unicorn_pid }}"
 stderr_path "{{ unicorn_log }}"
 stdout_path "{{ unicorn_log }}"
 
+# Set shim for picking up new rubies when upgrading:
+Unicorn::HttpServer::START_CTX[0] = "{{ current_path }}/script/unicorn"
+
 listen "{{ unicorn_sock }}", backlog: 128
 worker_processes {{ unicorn_workers }}
 timeout {{ unicorn_timeout }}
+
+# Check before processing each request, to ignore cancelled queued requests,
+# for example user refreshes multiple times
+check_client_connection true
 
 # save the worker pids to disk so we can monitor them
 after_fork do |server, worker|
