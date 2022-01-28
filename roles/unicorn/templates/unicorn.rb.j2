@@ -18,9 +18,30 @@ timeout {{ unicorn_timeout }}
 # for example user refreshes multiple times
 check_client_connection true
 
-# save the worker pids to disk so we can monitor them
 after_fork do |server, worker|
+  # save the worker pids to disk so we can monitor them
   worker_pid = "{{ pid_path }}/unicorn.#{worker.nr}.pid"
   system("echo #{Process.pid} > #{worker_pid}")
+
+  # Log stack trace before killing (eg to debug timeouts)
+  trap(:INT) do
+    File.open("#{Rails.root}/log/killed-workers-stack-trace.log", "a") do |file|
+      file.puts Time.zone.now.to_s(:utc)
+      file.puts Thread.current.backtrace.join("\n")
+    end
+    Process.kill :KILL, $$
+  end
 end
 
+# Patch Unicorn to send signal INT instead of KILL to kill workers.
+# This allows us to log stack trace before killing (see after_fork)
+# It's in the config file because I couldn't figure out how to wrap the gem.
+# From: http://shouichi.github.io/2015/02/08/unicorn-workers-timeout-because-of-stalled-redis-connection.html
+# As per Unicorn 4.9.0 [kill_worker](https://github.com/defunkt/unicorn/blob/d33d32fe87645e35ad0d0f3438bce9ba8a649da8/lib/unicorn/http_server.rb#L703)
+class Unicorn::HttpServer
+  def kill_worker(_signal, wpid)
+    Process.kill(:INT, wpid)
+    rescue Errno::ESRCH
+      worker = WORKERS.delete(wpid) and worker.close rescue nil
+  end
+end
