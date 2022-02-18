@@ -6,7 +6,7 @@
   apt:
     pkg:
     - mariadb-server
-    - python-mysqldb # required by Ansible mysql_db
+    - python3-mysqldb # required by Ansible mysql_db
     state: present
 
 - name: Ensure that service is started and enabled
