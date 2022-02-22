@@ -29,5 +29,7 @@
     - nginx
     # For the mysql2 gem
     - libmariadb-dev
+    # For mimemagic / paperclip
+    - shared-mime-info
     state: "present"
   become: yes
