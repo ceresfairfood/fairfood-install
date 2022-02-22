@@ -26,13 +26,13 @@
     name: "{{ metabase_db_name }}"
     state: present
 
-- name: Copy data file to server
+- name: Copy data file to server - first time only
   copy:
     src: "{{ mysql_data_file }}"
     dest: "/tmp/fairfood-init.sql"
   when: db_created.changed
 
-- name: Import initial data
+- name: Import initial data first time - first time only
   mysql_db:
     name: "{{ db_name }}"
     state: import
