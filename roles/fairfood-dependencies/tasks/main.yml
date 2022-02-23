@@ -27,7 +27,9 @@
     - imagemagick
     - memcached
     - nginx
-    # For the mysql2 gem version 0.3
-    - libmariadbclient-dev
+    # For the mysql2 gem
+    - libmariadb-dev
+    # For mimemagic / paperclip
+    - shared-mime-info
     state: "present"
   become: yes

@@ -11,8 +11,8 @@ Vagrant.configure(2) do |config|
   # https://docs.vagrantup.com.
 
   # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "debian/buster64"
+  # boxes at https://app.vagrantup.com/boxes/search.
+  config.vm.box = "debian/bullseye64"
 
   # VM network config.
   config.vm.network "forwarded_port", guest: 22, host: 2222

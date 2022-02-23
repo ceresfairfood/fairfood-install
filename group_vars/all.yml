@@ -31,10 +31,10 @@ rails_env: "staging"
 # Database variables
 db_user: "fairfood"
 db_name: "fairfood_production"
-# Created with:
+# Created with something like:
 #
-#   bundle exec rake db:drop db:create db:schema:load
-#   mysqldump ceres_dev > files/fairfood_schema.sql
+#   RAILS_ENV=staging ./bin/rails db:create db:schema:load
+#   mysqldump fairfood_production > files/fairfood_schema.sql
 #
 mysql_data_file: "fairfood_schema.sql"
 

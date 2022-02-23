@@ -13,6 +13,9 @@ systemctl start libvirtd
 
 ## Test it locally
 
+First, update the initial schema file (files/fairfood_schema.sql). You can generate it from a dev environment or server 
+environment. This will be loaded only the first time you run ansible on the server.
+
 ```sh
 vagrant up
 ansible-playbook -i hosts -l vagrant site.yml

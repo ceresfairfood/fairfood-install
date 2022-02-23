@@ -1,8 +1,8 @@
--- MySQL dump 10.17  Distrib 10.3.22-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.5.12-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: ceres_dev
+-- Host: localhost    Database: fairfood_production
 -- ------------------------------------------------------
--- Server version	10.3.22-MariaDB-0+deb10u1
+-- Server version	10.5.12-MariaDB-0+deb11u1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,14 +24,14 @@ DROP TABLE IF EXISTS `address_validation_results`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `address_validation_results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `full_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `full_address` varchar(255) DEFAULT NULL,
   `valid_address` tinyint(1) DEFAULT NULL,
-  `harmony_data` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `harmony_data` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_address_validation_results_on_full_address` (`full_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -53,10 +53,10 @@ DROP TABLE IF EXISTS `adjustments`;
 CREATE TABLE `adjustments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `target_id` int(11) DEFAULT NULL,
-  `target_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `target_type` varchar(255) DEFAULT NULL,
   `source_id` int(11) DEFAULT NULL,
-  `source_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `label` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `source_type` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
   `is_relative` tinyint(1) DEFAULT NULL,
   `amount` decimal(10,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -64,7 +64,7 @@ CREATE TABLE `adjustments` (
   KEY `index_adjustments_on_source_type` (`source_type`),
   KEY `index_adjustments_on_target_id` (`target_id`),
   KEY `index_adjustments_on_target_type` (`target_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS `adjustments_products`;
 CREATE TABLE `adjustments_products` (
   `adjustment_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,6 +99,32 @@ LOCK TABLES `adjustments_products` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ar_internal_metadata`
+--
+
+DROP TABLE IF EXISTS `ar_internal_metadata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ar_internal_metadata` (
+  `key` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ar_internal_metadata`
+--
+
+LOCK TABLES `ar_internal_metadata` WRITE;
+/*!40000 ALTER TABLE `ar_internal_metadata` DISABLE KEYS */;
+INSERT INTO `ar_internal_metadata` VALUES ('environment','staging','2022-02-22 22:49:43','2022-02-22 22:49:43');
+/*!40000 ALTER TABLE `ar_internal_metadata` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `banners`
 --
 
@@ -107,16 +133,22 @@ DROP TABLE IF EXISTS `banners`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `banners` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `text` text COLLATE utf8_unicode_ci NOT NULL,
-  `link` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `text` text NOT NULL,
+  `link` varchar(255) DEFAULT NULL,
   `show_from` date DEFAULT NULL,
   `show_until` date DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
+  `style` varchar(255) DEFAULT NULL,
+  `position` varchar(255) DEFAULT 'page_top',
+  `image_file_name` varchar(255) DEFAULT NULL,
+  `image_content_type` varchar(255) DEFAULT NULL,
+  `image_file_size` bigint(20) DEFAULT NULL,
+  `image_updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_banners_on_show_from` (`show_from`),
   KEY `index_banners_on_show_until` (`show_until`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -137,13 +169,13 @@ DROP TABLE IF EXISTS `cached_snippets`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cached_snippets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `content` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) DEFAULT NULL,
+  `content` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `wordpress_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +206,8 @@ CREATE TABLE `carts` (
   PRIMARY KEY (`id`),
   KEY `index_carts_on_delivery_destination_id` (`delivery_destination_id`),
   KEY `index_carts_on_payment_id` (`payment_id`),
-  KEY `index_carts_on_user_id` (`user_id`)
+  KEY `index_carts_on_user_id` (`user_id`),
+  CONSTRAINT `fk_rails_ea59a35211` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -267,15 +300,15 @@ DROP TABLE IF EXISTS `custom_deliverable_addresses`;
 CREATE TABLE `custom_deliverable_addresses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
-  `address_line_1` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `address_line_2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `suburb` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `postcode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `address_line_1` varchar(255) DEFAULT NULL,
+  `address_line_2` varchar(255) DEFAULT NULL,
+  `suburb` varchar(255) DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_custom_deliverable_addresses_on_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -323,13 +356,13 @@ DROP TABLE IF EXISTS `data_events`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `data_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `session_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `data` text COLLATE utf8_unicode_ci NOT NULL,
+  `session_id` varchar(255) NOT NULL,
+  `data` text NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_data_events_on_created_at` (`created_at`),
   KEY `index_data_events_on_session_id` (`session_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -359,7 +392,7 @@ CREATE TABLE `day_stock_profiles` (
   PRIMARY KEY (`id`),
   KEY `index_day_stock_profiles_on_date` (`date`),
   KEY `index_day_stock_profiles_on_product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,7 +457,7 @@ CREATE TABLE `deliveries` (
   KEY `index_deliveries_on_date` (`date`),
   KEY `index_deliveries_on_delivery_destination_id` (`delivery_destination_id`),
   KEY `index_deliveries_on_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -475,6 +508,7 @@ CREATE TABLE `delivery_destinations` (
   `short_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `harmony_full_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  KEY `index_delivery_destinations_on_address` (`address_line_1`,`address_line_2`,`suburb`,`postcode`),
   KEY `index_delivery_destinations_on_delivery_run_id` (`delivery_run_id`),
   KEY `index_delivery_locations_on_host_id` (`host_id`),
   KEY `index_delivery_locations_on_lat_and_lng` (`lat`,`lng`),
@@ -503,7 +537,7 @@ DROP TABLE IF EXISTS `delivery_fees`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `delivery_fees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
   `amount` decimal(8,2) NOT NULL,
   `delivery_day` tinyint(4) NOT NULL,
   `delivery_max` decimal(8,2) DEFAULT NULL,
@@ -516,7 +550,7 @@ CREATE TABLE `delivery_fees` (
   KEY `index_delivery_fees_on_available_until` (`available_until`),
   KEY `index_delivery_fees_on_delivery_day` (`delivery_day`),
   KEY `index_delivery_fees_on_delivery_max` (`delivery_max`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -526,6 +560,33 @@ CREATE TABLE `delivery_fees` (
 LOCK TABLES `delivery_fees` WRITE;
 /*!40000 ALTER TABLE `delivery_fees` DISABLE KEYS */;
 /*!40000 ALTER TABLE `delivery_fees` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `delivery_limits`
+--
+
+DROP TABLE IF EXISTS `delivery_limits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `delivery_limits` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `day_of_week` int(11) NOT NULL,
+  `max_deliveries` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_delivery_limits_on_day_of_week` (`day_of_week`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `delivery_limits`
+--
+
+LOCK TABLES `delivery_limits` WRITE;
+/*!40000 ALTER TABLE `delivery_limits` DISABLE KEYS */;
+/*!40000 ALTER TABLE `delivery_limits` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -545,8 +606,9 @@ CREATE TABLE `delivery_runs` (
   `lock_version` int(11) DEFAULT 0,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `delivery_days` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `delivery_day` tinyint(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
+  KEY `index_delivery_runs_on_delivery_day` (`delivery_day`),
   KEY `index_delivery_runs_on_packing_shift_id` (`packing_shift_id`),
   KEY `index_delivery_runs_on_vehicle_id` (`vehicle_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -570,13 +632,13 @@ DROP TABLE IF EXISTS `email_templates`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `email_templates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `body` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `body_html` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `body` text DEFAULT NULL,
+  `body_html` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_email_templates_on_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -626,18 +688,18 @@ DROP TABLE IF EXISTS `gift_vouchers`;
 CREATE TABLE `gift_vouchers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
-  `recipient_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `recipient_name` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
   `value` decimal(8,2) DEFAULT NULL,
   `invoice_id` int(11) DEFAULT NULL,
-  `code` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `code` varchar(16) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_gift_vouchers_on_invoice_id` (`invoice_id`),
   KEY `index_gift_vouchers_on_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -663,7 +725,7 @@ CREATE TABLE `home_delivery_area_delivery_runs` (
   PRIMARY KEY (`id`),
   KEY `index_home_delivery_area_delivery_runs_on_delivery_run_id` (`delivery_run_id`),
   KEY `index_home_delivery_area_delivery_runs_on_home_delivery_area_id` (`home_delivery_area_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -685,12 +747,12 @@ DROP TABLE IF EXISTS `home_delivery_area_postcodes`;
 CREATE TABLE `home_delivery_area_postcodes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `home_delivery_area_id` int(11) DEFAULT NULL,
-  `postcode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_home_delivery_area_postcodes_on_home_delivery_area_id` (`home_delivery_area_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -711,15 +773,15 @@ DROP TABLE IF EXISTS `home_delivery_areas`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `home_delivery_areas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `colour` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `admin_colour` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zone_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `delivery_days` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `colour` varchar(255) DEFAULT NULL,
+  `admin_colour` varchar(255) DEFAULT NULL,
+  `zone_name` varchar(255) DEFAULT NULL,
+  `delivery_days` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -869,14 +931,18 @@ CREATE TABLE `orders` (
   `delivery_fee` decimal(8,2) NOT NULL DEFAULT 0.00,
   `delivery_date` date DEFAULT NULL,
   `base_unit_price` decimal(8,2) DEFAULT NULL,
+  `delivery_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_orders_on_cancelled` (`cancelled`),
   KEY `index_orders_on_created_at` (`created_at`),
   KEY `index_orders_on_created_by_user_id` (`created_by_user_id`),
   KEY `index_orders_on_delivery_date` (`delivery_date`),
   KEY `index_orders_on_food_host_id` (`delivery_destination_id`),
+  KEY `fk_rails_caba0da8d5` (`delivery_id`),
+  KEY `index_orders_on_product_id_and_cancelled` (`product_id`,`cancelled`),
   KEY `index_orders_on_product_id` (`product_id`),
-  KEY `index_orders_on_user_id` (`user_id`)
+  KEY `index_orders_on_user_id` (`user_id`),
+  CONSTRAINT `fk_rails_caba0da8d5` FOREIGN KEY (`delivery_id`) REFERENCES `deliveries` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -928,10 +994,10 @@ DROP TABLE IF EXISTS `packing_categories`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `packing_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -989,7 +1055,7 @@ CREATE TABLE `participations` (
   `completed_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_participations_on_user_id_and_promotion_id` (`user_id`,`promotion_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1212,13 +1278,11 @@ CREATE TABLE `product_types` (
   `image_content_type` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `image_file_size` int(11) DEFAULT NULL,
   `image_updated_at` datetime DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
-  `ancestry_string` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `position` int(11) NOT NULL DEFAULT 0,
+  `ancestry` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `index_product_types_on_ancestry_string` (`ancestry_string`),
+  KEY `index_product_types_on_ancestry` (`ancestry`),
   KEY `index_product_types_on_name` (`name`),
-  KEY `index_product_types_on_parent_id` (`parent_id`),
   KEY `index_product_types_on_position` (`position`),
   KEY `index_product_types_on_slug` (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1260,7 +1324,6 @@ CREATE TABLE `products` (
   `image_file_size` int(11) DEFAULT NULL,
   `image_updated_at` datetime DEFAULT NULL,
   `short_description` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
   `jit_supplier_id` int(11) DEFAULT NULL,
   `unlimited` tinyint(1) NOT NULL DEFAULT 1,
   `instock` int(11) NOT NULL DEFAULT 0,
@@ -1282,7 +1345,6 @@ CREATE TABLE `products` (
   KEY `index_products_on_is_active` (`is_active`),
   KEY `index_products_on_supplier_id` (`jit_supplier_id`),
   KEY `index_products_on_packing_category_id` (`packing_category_id`),
-  KEY `index_products_on_position` (`position`),
   KEY `index_products_on_product_type_id` (`product_type_id`),
   KEY `index_products_on_unlimited` (`unlimited`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1308,7 +1370,7 @@ CREATE TABLE `products_promotions` (
   `product_id` int(11) DEFAULT NULL,
   `promotion_id` int(11) DEFAULT NULL,
   KEY `index_products_promotions_on_product_id_and_promotion_id` (`product_id`,`promotion_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1332,7 +1394,7 @@ CREATE TABLE `products_secondary_product_types` (
   `product_type_id` int(11) DEFAULT NULL,
   KEY `index_products_secondary_product_types_on_product_id` (`product_id`),
   KEY `index_products_secondary_product_types_on_product_type_id` (`product_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1353,15 +1415,15 @@ DROP TABLE IF EXISTS `promotions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `promotions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
   `valid_from` datetime DEFAULT NULL,
   `valid_to` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `complete_by` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1371,6 +1433,36 @@ CREATE TABLE `promotions` (
 LOCK TABLES `promotions` WRITE;
 /*!40000 ALTER TABLE `promotions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `promotions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `purchase_limits`
+--
+
+DROP TABLE IF EXISTS `purchase_limits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `purchase_limits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `limit_type` varchar(12) DEFAULT NULL,
+  `maximum` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_purchase_limits_on_product_id_and_limit_type` (`product_id`,`limit_type`),
+  KEY `index_purchase_limits_on_product_id` (`product_id`),
+  CONSTRAINT `fk_rails_f0939a9f78` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchase_limits`
+--
+
+LOCK TABLES `purchase_limits` WRITE;
+/*!40000 ALTER TABLE `purchase_limits` DISABLE KEYS */;
+/*!40000 ALTER TABLE `purchase_limits` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1419,8 +1511,39 @@ CREATE TABLE `schema_migrations` (
 
 LOCK TABLES `schema_migrations` WRITE;
 /*!40000 ALTER TABLE `schema_migrations` DISABLE KEYS */;
-INSERT INTO `schema_migrations` VALUES ('20101025120000'),('20101028060204'),('20101028061435'),('20101028065045'),('20101028132438'),('20101029005613'),('20101029013434'),('20101029014424'),('20101029032535'),('20101029032938'),('20101103122940'),('20101103132932'),('20101104042743'),('20101117022540'),('20101206135743'),('20101208040525'),('20101215033821'),('20101215041754'),('20110302141234'),('20110302141616'),('20110309043139'),('20110315150336'),('20110320100113'),('20110320123304'),('20110321125536'),('20110322103753'),('20110322104348'),('20110324033741'),('20110329224338'),('20110331004018'),('20110331051902'),('20110411161651'),('20110413014924'),('20110421004535'),('20110421014133'),('20110427043236'),('20110427052941'),('20110504021942'),('20110504023902'),('20110504043609'),('20110504055509'),('20110504055721'),('20110511020630'),('20110511020933'),('20110511024028'),('20110512081639'),('20110518040610'),('20110518125401'),('20110518131626'),('20110518132538'),('20110518132927'),('20110519001452'),('20110519004335'),('20110519005152'),('20110519051546'),('20110519074938'),('20110522145740'),('20110601013241'),('20110601031706'),('20110601044515'),('20110601052931'),('20110601060918'),('20110601064113'),('20110616131958'),('20110622042649'),('20110623042705'),('20110623045537'),('20110623073912'),('20110623074112'),('20110630002949'),('20110630041041'),('20110630073312'),('20110706013444'),('20110713000336'),('20110715110704'),('20110715112720'),('20110810051916'),('20110811062301'),('20110811071216'),('20110817152612'),('20110818031310'),('20110822031833'),('20110822054731'),('20110822062652'),('20110822073047'),('20111121045131'),('20111122044032'),('20120611021141'),('20120614043016'),('20120711042757'),('20120712024002'),('20120712050913'),('20120713011656'),('20120719003256'),('20120723051315'),('20120803021637'),('20120806064513'),('20120807024603'),('20120815033921'),('20120918023504'),('20120918043747'),('20120918050158'),('20121006234631'),('20121016003515'),('20121120001328'),('20121206040053'),('20121210234215'),('20121219033527'),('20130205002544'),('20130226022445'),('20130507014316'),('20130530015424'),('20130611043252'),('20130618001513'),('20130626011615'),('20130626025208'),('20130724033427'),('20130725002927'),('20130725211916'),('20130726060555'),('20130815030601'),('20130903045357'),('20130904000225'),('20130904041853'),('20130924000931'),('20131029040139'),('20131111014451'),('20131111020730'),('20131111035703'),('20131113020821'),('20131114030336'),('20131125005706'),('20131126021115'),('20131201225831'),('20131209024932'),('20131210035818'),('20131210042549'),('20131211004819'),('20140113001940'),('20140217051354'),('20140304022339'),('20140422020332'),('20140422054842'),('20140422055509'),('20140422062435'),('20140506021614'),('20160503060037'),('20160510050625'),('20160519060158'),('20161201011344'),('20170126002723'),('20170126003627'),('20170126022534'),('20170215051531'),('20170222062331'),('20170302051640'),('20170303051346'),('20170311051717'),('20170316010432'),('20170515163418'),('20170601205207'),('20170606063853'),('20170607041719'),('20170704010406'),('20170906173912'),('20170922070711'),('20171001230443'),('20171109025348'),('20171128185717'),('20171206051619'),('20171214044658'),('20180328210213'),('20180409053621'),('20180410011722'),('20180411045308'),('20180423231654'),('20180503062627'),('20180503072209'),('20180524035937'),('20180524231816'),('20180525070416'),('20181211032356'),('20190104030004'),('20190104031139'),('20190104032120'),('20190528055455'),('20190710061937'),('20190904053757'),('20190904065225'),('20190904071702'),('20190905225540'),('20190910062559'),('20190911042535'),('20190925045610'),('20190925050057'),('20191025003115'),('20191113063051'),('20191113063052'),('20191113063053'),('20191113063054'),('20191128064319'),('20191202034035'),('20191203065357'),('20200128062947'),('20200430055628'),('20200501010115');
+INSERT INTO `schema_migrations` VALUES ('20101025120000'),('20101028060204'),('20101028061435'),('20101028065045'),('20101028132438'),('20101029005613'),('20101029013434'),('20101029014424'),('20101029032535'),('20101029032938'),('20101103122940'),('20101103132932'),('20101104042743'),('20101117022540'),('20101206135743'),('20101208040525'),('20101215033821'),('20101215041754'),('20110302141234'),('20110302141616'),('20110309043139'),('20110315150336'),('20110320100113'),('20110320123304'),('20110321125536'),('20110322103753'),('20110322104348'),('20110324033741'),('20110329224338'),('20110331004018'),('20110331051902'),('20110411161651'),('20110413014924'),('20110421004535'),('20110421014133'),('20110427043236'),('20110427052941'),('20110504021942'),('20110504023902'),('20110504043609'),('20110504055509'),('20110504055721'),('20110511020630'),('20110511020933'),('20110511024028'),('20110512081639'),('20110518040610'),('20110518125401'),('20110518131626'),('20110518132538'),('20110518132927'),('20110519001452'),('20110519004335'),('20110519005152'),('20110519051546'),('20110519074938'),('20110522145740'),('20110601013241'),('20110601031706'),('20110601044515'),('20110601052931'),('20110601060918'),('20110601064113'),('20110616131958'),('20110622042649'),('20110623042705'),('20110623045537'),('20110623073912'),('20110623074112'),('20110630002949'),('20110630041041'),('20110630073312'),('20110706013444'),('20110713000336'),('20110715110704'),('20110715112720'),('20110810051916'),('20110811062301'),('20110811071216'),('20110817152612'),('20110818031310'),('20110822031833'),('20110822054731'),('20110822062652'),('20110822073047'),('20111121045131'),('20111122044032'),('20120611021141'),('20120614043016'),('20120711042757'),('20120712024002'),('20120712050913'),('20120713011656'),('20120719003256'),('20120723051315'),('20120803021637'),('20120806064513'),('20120807024603'),('20120815033921'),('20120918023504'),('20120918043747'),('20120918050158'),('20121006234631'),('20121016003515'),('20121120001328'),('20121206040053'),('20121210234215'),('20121219033527'),('20130205002544'),('20130226022445'),('20130507014316'),('20130530015424'),('20130611043252'),('20130618001513'),('20130626011615'),('20130626025208'),('20130724033427'),('20130725002927'),('20130725211916'),('20130726060555'),('20130815030601'),('20130903045357'),('20130904000225'),('20130904041853'),('20130924000931'),('20131029040139'),('20131111014451'),('20131111020730'),('20131111035703'),('20131113020821'),('20131114030336'),('20131125005706'),('20131126021115'),('20131201225831'),('20131209024932'),('20131210035818'),('20131210042549'),('20131211004819'),('20140113001940'),('20140217051354'),('20140304022339'),('20140422020332'),('20140422054842'),('20140422055509'),('20140422062435'),('20140506021614'),('20160503060037'),('20160510050625'),('20160519060158'),('20161201011344'),('20170126002723'),('20170126003627'),('20170126022534'),('20170215051531'),('20170222062331'),('20170302051640'),('20170303051346'),('20170311051717'),('20170316010432'),('20170515163418'),('20170601205207'),('20170606063853'),('20170607041719'),('20170704010406'),('20170906173912'),('20170922070711'),('20171001230443'),('20171109025348'),('20171128185717'),('20171206051619'),('20171214044658'),('20180328210213'),('20180409053621'),('20180410011722'),('20180411045308'),('20180423231654'),('20180503062627'),('20180503072209'),('20180524035937'),('20180524231816'),('20180525070416'),('20181211032356'),('20190104030004'),('20190104031139'),('20190104032120'),('20190528055455'),('20190710061937'),('20190904053757'),('20190904065225'),('20190904071702'),('20190905225540'),('20190910062559'),('20190911042535'),('20190925045610'),('20190925050057'),('20191025003115'),('20191113063051'),('20191113063052'),('20191113063053'),('20191113063054'),('20191128064319'),('20191202034035'),('20191203065357'),('20200128062947'),('20200430055628'),('20200501010115'),('20200623052000'),('20200623053959'),('20200708231807'),('20200724041935'),('20200729062402'),('20200729063652'),('20200806060450'),('20201007034400'),('20201028035153'),('20201118004700'),('20210202001907'),('20210203000318'),('20210310031647'),('20210428062936'),('20210512062904'),('20210514012932'),('20210519014948'),('20210608054117'),('20210608071955'),('20210629004432'),('20210728052707'),('20210914052518'),('20210915232717'),('20211021061832'),('20211021062059'),('20211021232800'),('20211022022253'),('20211025235953'),('20211109004038'),('20211209224409'),('20211214044542'),('20220110003528'),('20220110021108'),('20220112011947'),('20220112030427'),('20220208012517');
 /*!40000 ALTER TABLE `schema_migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `stored_credit_cards`
+--
+
+DROP TABLE IF EXISTS `stored_credit_cards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `stored_credit_cards` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `billing_id` varchar(255) NOT NULL,
+  `last_digits` varchar(4) DEFAULT NULL,
+  `month` tinyint(4) DEFAULT NULL,
+  `year` smallint(6) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index_stored_credit_cards_on_billing_id` (`billing_id`),
+  KEY `fk_rails_3aecbdec81` (`user_id`),
+  CONSTRAINT `fk_rails_3aecbdec81` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `stored_credit_cards`
+--
+
+LOCK TABLES `stored_credit_cards` WRITE;
+/*!40000 ALTER TABLE `stored_credit_cards` DISABLE KEYS */;
+/*!40000 ALTER TABLE `stored_credit_cards` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1489,7 +1612,7 @@ CREATE TABLE `suppliers` (
   `interview_image_updated_at` datetime DEFAULT NULL,
   `hub_id` int(11) DEFAULT NULL,
   `postcode` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `jit_batch_mode` int(11) DEFAULT 0,
+  `cutoff_at` time DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_suppliers_on_hub_id` (`hub_id`),
   KEY `index_suppliers_on_name` (`name`)
@@ -1516,15 +1639,22 @@ CREATE TABLE `taggings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag_id` int(11) DEFAULT NULL,
   `taggable_id` int(11) DEFAULT NULL,
-  `taggable_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `taggable_type` varchar(255) DEFAULT NULL,
   `tagger_id` int(11) DEFAULT NULL,
-  `tagger_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `context` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tagger_type` varchar(255) DEFAULT NULL,
+  `context` varchar(128) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `taggings_idx` (`tag_id`,`taggable_id`,`taggable_type`,`context`,`tagger_id`,`tagger_type`),
-  KEY `index_taggings_on_taggable_id_and_taggable_type_and_context` (`taggable_id`,`taggable_type`,`context`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  KEY `index_taggings_on_context` (`context`),
+  KEY `index_taggings_on_tag_id` (`tag_id`),
+  KEY `index_taggings_on_taggable_id_and_taggable_type_and_context` (`taggable_id`,`taggable_type`,`context`),
+  KEY `taggings_idy` (`taggable_id`,`taggable_type`,`tagger_id`,`context`),
+  KEY `index_taggings_on_taggable_id` (`taggable_id`),
+  KEY `index_taggings_on_taggable_type` (`taggable_type`),
+  KEY `index_taggings_on_tagger_id_and_tagger_type` (`tagger_id`,`tagger_type`),
+  KEY `index_taggings_on_tagger_id` (`tagger_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1545,11 +1675,11 @@ DROP TABLE IF EXISTS `tags`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `taggings_count` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_tags_on_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1628,13 +1758,13 @@ DROP TABLE IF EXISTS `user_flags`;
 CREATE TABLE `user_flags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_user_flags_on_user_id_and_name` (`user_id`,`name`),
   KEY `index_user_flags_on_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1657,8 +1787,8 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `crypted_password` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `salt` varchar(40) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `crypted_password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `salt` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `state` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending',
@@ -1676,7 +1806,6 @@ CREATE TABLE `users` (
   `lng` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email_reminders` tinyint(1) NOT NULL DEFAULT 1,
   `sms_reminders` tinyint(1) NOT NULL DEFAULT 1,
-  `cc_tail` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `persistence_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `single_access_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `perishable_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -1694,7 +1823,7 @@ CREATE TABLE `users` (
   `is_active` tinyint(1) DEFAULT 1,
   `receives_newsletter` tinyint(1) DEFAULT 1,
   `harmony_full_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `organisation_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `over_18` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_users_on_email` (`email`),
   KEY `index_users_on_delivery_destination_id` (`delivery_destination_id`),
@@ -1756,4 +1885,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-12 11:22:25
+-- Dump completed on 2022-02-23 10:28:22
