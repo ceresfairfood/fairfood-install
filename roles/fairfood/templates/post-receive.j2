@@ -3,7 +3,7 @@
 # bash is needed to `source` rbenv stuff
 
 # Fail on any error
-set -e
+#set -e # disabled because precompile-assets sometimes returns error exit code
 
 # Go to the working tree
 cd "$GIT_DIR/.." || exit 1
@@ -19,46 +19,60 @@ upgrade_application() {
         local action="${1:-reload}"
 
         source script/rbenv-init.sh
-        rbenv install --skip-existing
+        ./script/rbenv-install.sh
         ./script/install-bundler
 
         # Install the required gems
         # Note: the 'LANG=en_US.UTF-8' is a fix for jquery-rails 1.0.17...fails even though server has correct locale setting
         LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test"
 
-        ./script/precompile-assets
+        ./script/precompile-assets # sometimes returns error exit code
 
         echo "Migrating database..."
         bundle exec rake db:migrate
 
         # Configure CDN with Ansible
         # upload all assets to the CDN
-        #echo Upload all assets to CDN live:upload_assets
+        #echo "Upload all assets to CDN live:upload_assets"
         #bundle exec rake live:upload_assets
 
         # TODO: make schedule server agnostic
         # install required cron jobs
-        #bundle exec whenever --set 'environment=production' --update-crontab members.ceresfairfood.org.au
+        #bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}""
 
         # Restart DJ workers
         ./script/delayed_job restart
 
 	# Restart or reload unicorn
+        echo "$action unicorn"
         /etc/init.d/unicorn_fairfood "$action"
         #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
+
+        # Update the static 500.html page for nginx
+        # Delete it first so that nginx is not delivering the old version:
+        rm public/500.html
+        # Then save the new version. Don't pipe it directly, because that will create the file before the request and nginx will deliver an empty file.
+        curl -s https://{{ domain }}/500 > tmp/500.html
+        mv tmp/500.html public/
+
+        # tell bugsnag about the deploy, keeps the error history clean
+        #bundle exec rake bugsnag:deploy TO="$RAILS_ENV"
 }
 
 while read oldrev newrev refname; do
+        echo $oldrev
         if [ "$refname" = "refs/heads/master" ]; then
-                # Check if ruby changed
-                if git diff "$newrev" --name-only | grep -Fxq '.ruby-version'; then
-                        action="restart"
-                else
-                        action="reload"
-                fi
-                # Checkout the new revision
-                git reset --hard "$newrev"
-                upgrade_application "$action"
+        # Check if ruby or gems changed
+        if git diff --quiet "$newrev" -- ".ruby-version" "Gemfile.lock"; then
+                # no changes
+                action="reload"
+        else
+                # we need to start a new master process
+                action="upgrade"
+        fi
+        # Checkout the new revision
+        git reset --hard "$newrev"
+        upgrade_application "$action"
         fi
 done
 
