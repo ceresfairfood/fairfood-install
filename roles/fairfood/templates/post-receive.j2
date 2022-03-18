@@ -33,12 +33,14 @@ upgrade_application() {
   echo "Migrating database (db:migrate)..."
   bundle exec rake db:migrate
 
-  echo "Upload public/assets/ to CDN (live:upload_assets)..."
-  #bundle exec rake live:upload_assets
+  if [ "$RAILS_ENV" = "production" ]; then
+    echo "Upload public/assets/ to CDN (live:upload_assets)..."
+    bundle exec rake live:upload_assets
 
-  echo "Install schedule cron jobs (whenever)..."
-  # TODO: make schedule server agnostic
-  #bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}""
+    echo "Install schedule cron jobs (whenever)..."
+    # TODO: make schedule server agnostic
+    bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}"
+  fi
 
   # Restart DJ workers
   ./script/delayed_job restart
