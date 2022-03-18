@@ -47,3 +47,6 @@
     - role: fairfood
       become: yes
       become_user: "{{ app_user }}"
+
+    - role: nginx
+      become: yes
