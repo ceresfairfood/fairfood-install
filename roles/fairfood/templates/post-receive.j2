@@ -18,33 +18,33 @@ export RAILS_ENV="{{ rails_env }}"
 upgrade_application() {
   local action="${1:-reload}"
 
+  echo "RAILS_ENV=$RAILS_ENV"
+
   source script/rbenv-init.sh
   ./script/rbenv-install.sh
   ./script/install-bundler
 
   # Install the required gems
   # Note: the 'LANG=en_US.UTF-8' is a fix for jquery-rails 1.0.17...fails even though server has correct locale setting
-  LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test"
+  LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test" | sed /^Using.*$/d
 
   ./script/precompile-assets # sometimes returns error exit code
 
-  echo "Migrating database..."
+  echo "Migrating database (db:migrate)..."
   bundle exec rake db:migrate
 
-  # Configure CDN with Ansible
-  # upload all assets to the CDN
-  #echo "Upload all assets to CDN live:upload_assets"
+  echo "Upload public/assets/ to CDN (live:upload_assets)..."
   #bundle exec rake live:upload_assets
 
+  echo "Install schedule cron jobs (whenever)..."
   # TODO: make schedule server agnostic
-  # install required cron jobs
   #bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}""
 
   # Restart DJ workers
   ./script/delayed_job restart
 
   # Restart or reload unicorn
-  echo "$action unicorn"
+  echo "Unicorn $action..."
   /etc/init.d/unicorn_fairfood "$action"
   #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
 
@@ -60,7 +60,7 @@ upgrade_application() {
 }
 
 while read oldrev newrev refname; do
-  echo $oldrev
+  echo "HEAD was at $oldrev"
   if [ "$refname" = "refs/heads/master" ]; then
   # Check if ruby or gems changed
   if git diff --quiet "$newrev" -- ".ruby-version" "Gemfile.lock"; then
