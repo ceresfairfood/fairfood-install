@@ -7,3 +7,8 @@ have to be named `username.pub` and can contain more than one key. Examples:
 - andy.pub
 - maikel.pub
 - kristina.pub
+
+
+Run the `add-users` playbook anytime to add new users:
+
+    ansible-playbook -i hosts -l staging2.ceresfairfood.org.au add-users.yml

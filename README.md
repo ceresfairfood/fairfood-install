@@ -11,6 +11,18 @@ sudo apt install ansible vagrant virt-manager
 systemctl start libvirtd
 ```
 
+If virt-manager doesn't work, try virtualbox.
+```sh
+# On macOS 10.15:
+brew install ansible vagrant virtualbox
+# Also for first-time setup, you'll need sshpass to enter the root password:
+brew install hudochenkov/sshpass/sshpass # 3rd party tap, check before using. Remove after using.
+```
+
+Add your public key to the repo to automatically set up authorised users, eg:
+
+    cat ~/.ssh/id_rsa.pub >> files/admin-ssh-keys/$USER.pub
+
 ## Test it locally
 
 First, update the initial schema file (files/fairfood_schema.sql). You can generate it from a dev environment or server 
@@ -42,11 +54,14 @@ ansible-lint site.yml
 
 ## Setting up a new staging server
 
-Add the new server to the `hosts` file. Then run:
+1. Add the new server to the `hosts` file.
+2. Get the root user password
+3. Optionally add public key(s) to `files/admin-ssh-keys`
+4. Then:
 
 ```
-ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root
-ssh members.ceresfairfood.org.au@staging2.ceresfairfood.org.au -A
+ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root -k
+ssh fairfood@staging2.ceresfairfood.org.au -A
 $ ssh staging.ceresfairfood.org.au "mysqldump -u root fairfood_production | gzip" > old_server.sql.gz
 $ zcat old_server.sql.gz | mysql fairfood_production
 
@@ -57,6 +72,14 @@ $ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --exp
 
 # Disable root login.
 ```
+
+## Repeatable tasks
+
+Most tasks are not designed to be repeated.
+
+The [add-users](files/admin-ssh-keys/README.md) playbook can be used to add new users.
+
+When running tasks as your own user, you need to include `--ask-become-pass` and provide your password.
 
 ## Installing Metabase
 
