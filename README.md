@@ -50,7 +50,7 @@ To test the post-receive script, you can push from your local environment.
 
 ```
 cd fairfood/
-git remote add vagrant ssh://members.ceresfairfood.org.au@localhost:2222/srv/members.ceresfairfood.org.au/current
+git remote add vagrant ssh://fairfood@localhost:2222/srv/fairfood/current
 
 git push vagrant
 ```
