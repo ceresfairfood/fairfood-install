@@ -1,0 +1,8 @@
+---
+
+- name: Install system dependencies of metabase
+  apt:
+    pkg:
+    - openjdk-11-jdk #(8 or later required)
+    state: "present"
+  become: yes

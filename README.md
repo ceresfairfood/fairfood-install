@@ -113,13 +113,6 @@ You can refer to defaults: https://github.com/libre-ops/metabase/blob/master/def
 
 Choose the latest version of Metabase by setting the variable in `all.yml`. 
 
-JDK is required, eg:
-
-```sh
-sudo apt update
-sudo apt install openjdk-11-jdk #(8 or later)
-```
-
 Use `metabase.yml` playbook, eg:
 ```sh
 ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
@@ -134,6 +127,7 @@ Default login is example@example.com / metabase123
 
 Metabase config includes:
 
+1. Copy existing config database from another installation, eg `/home/metabase/metabase.db.*`
 1. Add MySQL database fairfood_metabase, user metabase, password (see `credentials/*/mysqlpassword`)
 2. Setup email to use localhost port 25, from metabase@metabase.ceresfairfood.org.au
 

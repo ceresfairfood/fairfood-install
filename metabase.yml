@@ -13,6 +13,9 @@
     - staging
 
   roles:
+    - role: metabase-dependencies
+      become: yes
+
     - role: mysql
       become: yes
 
@@ -20,7 +23,7 @@
       become: yes
       vars:
         # user and version are defined in all.yml
-        use_own_database: false
+        use_own_database: false # settings are saved in /home/metabase/metabase.db.*
 
     - role: jdauphant.nginx
       vars:
