@@ -3,7 +3,7 @@
 app_name: fairfood
 app: "{{ app_name }}"
 
-app_user: "members.ceresfairfood.org.au"
+app_user: "fairfood"
 app_user_home: "/srv/{{ app_user }}"
 
 metabase_version: v0.39.3
