@@ -65,7 +65,7 @@ nginx_sites_available:
   default:
     - |
       listen 80 default_server deferred;
-      listen [::]:80 default_serve deferredr;
+      listen [::]:80 default_server deferred;
       server_name _;
       access_log off;
       # nginx code to close the connection without sending any data:
