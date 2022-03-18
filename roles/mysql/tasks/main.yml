@@ -32,7 +32,7 @@
     dest: "/tmp/fairfood-init.sql"
   when: db_created.changed
 
-- name: Import initial data first time - first time only
+- name: Import initial data - first time only
   mysql_db:
     name: "{{ db_name }}"
     state: import

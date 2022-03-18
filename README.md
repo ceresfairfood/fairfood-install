@@ -34,6 +34,25 @@ ansible-playbook -i hosts -l vagrant site.yml
 
 # Login to debug:
 vagrant ssh
+
+# You may need to manually install the db client:
+# sudo apt-get install libmariadb-dev
+```
+
+Tips for testing individual changes:
+ * Go straight to specific task: `--start-at-task='<name of task>'`
+ * Run one at a time: `--step`
+
+ Eg: `ansible-playbook -i hosts -l vagrant-virtualbox site.yml --step --start-at-task='Install configuration files'`
+
+### Git Push
+To test the post-receive script, you can push from your local environment.
+
+```
+cd fairfood/
+git remote add vagrant ssh://members.ceresfairfood.org.au@localhost:2222/srv/members.ceresfairfood.org.au/current
+
+git push vagrant
 ```
 
 ## Community Roles
@@ -55,22 +74,28 @@ ansible-lint site.yml
 ## Setting up a new staging server
 
 1. Add the new server to the `hosts` file.
-2. Get the root user password
-3. Optionally add public key(s) to `files/admin-ssh-keys`
-4. Then:
-
+2. Optionally add public key(s) to `files/admin-ssh-keys`
+3. Run playbook: `ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root --ask-pass` # root user password defaults to Rimu login
+  - If mysql isn't working, ensure it really did install: `sudo apt-get install libmariadb-dev`
+4. Push codebase and install app: `git push staging` (this must be done before loading data dump, to ensure any recently deleted tables are removed.)
+5. Load database, eg: 
 ```
-ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root -k
 ssh fairfood@staging2.ceresfairfood.org.au -A
 $ ssh staging.ceresfairfood.org.au "mysqldump -u root fairfood_production | gzip" > old_server.sql.gz
 $ zcat old_server.sql.gz | mysql fairfood_production
+```
 
-# Update the domain, then:
+If DNS is not pointing to this server yet, update it and obtain new certificate:
+```
 ssh root@staging2.ceresfairfood.org.au
 $ # Add server name to nginx config.
 $ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --expand --renew-hook 'systemctl reload nginx'
+```
 
-# Disable root login.
+Finally, **remember to disable root login.**
+```
+sudo vim /etc/ssh/sshd_config
+# PermitRootLogin no
 ```
 
 ## Repeatable tasks
