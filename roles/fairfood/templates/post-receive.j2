@@ -50,11 +50,11 @@ upgrade_application() {
   /etc/init.d/unicorn_fairfood "$action"
   #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
 
-  # Update the static 500.html page for nginx
+  echo "Update the static 500.html page for nginx..."
   # Delete it first so that nginx is not delivering the old version:
   rm public/500.html
   # Then save the new version. Don't pipe it directly, because that will create the file before the request and nginx will deliver an empty file.
-  curl -s https://{{ domain }}/500 > tmp/500.html
+  wget https://members.ceresfairfood.org.au/500 -O tmp/500.html 2>&1 | egrep 'saved|wget:' # reduce output to only include success or fail results.
   mv tmp/500.html public/
 
   # tell bugsnag about the deploy, keeps the error history clean
