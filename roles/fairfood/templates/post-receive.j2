@@ -25,8 +25,7 @@ upgrade_application() {
   ./script/install-bundler
 
   # Install the required gems
-  # Note: the 'LANG=en_US.UTF-8' is a fix for jquery-rails 1.0.17...fails even though server has correct locale setting
-  LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test" | sed /^Using.*$/d
+  bundle --path "$HOME/.gem" --deployment --without "development" "test" | sed /^Using.*$/d
 
   ./script/precompile-assets # sometimes returns error exit code
 
