@@ -30,7 +30,7 @@ rails_env: "staging"
 #----------------------------------------------------------------------
 # Database variables
 db_user: "fairfood"
-db_name: "fairfood_production"
+db_name: "fairfood_{{ rails_env }}"
 # Created with something like:
 #
 #   RAILS_ENV=staging ./bin/rails db:create db:schema:load

@@ -15,7 +15,7 @@
     state: started
     enabled: yes
 
-- name: Create production database
+- name: Create fairfood database
   mysql_db:
     name: "{{ db_name }}"
     state: present
