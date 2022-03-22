@@ -118,11 +118,6 @@ Use `metabase.yml` playbook, eg:
 ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
 ```
 
-Certificate was set up manually:
-```sh
-certbot certonly --nginx --email "maikel@openfoodnetwork.org.au" -d "metabase.ceresfairfood.org.au" --renew-hook "systemctl reload nginx"
-```
-
 Default login is example@example.com / metabase123
 
 Metabase config includes:
