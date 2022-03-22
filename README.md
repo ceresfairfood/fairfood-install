@@ -120,9 +120,8 @@ ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-be
 
 Default login is example@example.com / metabase123
 
-Metabase config includes:
+Copy existing config database from another installation (eg from `/home/metabase/metabase.db.*`). Or config from scratch, including:
 
-1. Copy existing config database from another installation, eg `/home/metabase/metabase.db.*`
 1. Add MySQL database fairfood_metabase, user metabase, password (see `credentials/*/mysqlpassword`)
 2. Setup email to use localhost port 25, from metabase@metabase.ceresfairfood.org.au
 
