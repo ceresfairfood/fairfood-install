@@ -25,7 +25,7 @@ upgrade_application() {
   ./script/install-bundler
 
   # Install the required gems
-  bundle --path "$HOME/.gem" --deployment --without "development" "test" | sed /^Using.*$/d
+  bundle --path "$HOME/.gem" --deployment --without "development" "test" | egrep -v '^Using.*$'
 
   ./script/precompile-assets
 
