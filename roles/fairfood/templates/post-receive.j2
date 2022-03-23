@@ -16,50 +16,62 @@ APP_ROOT="$(pwd)"
 export RAILS_ENV="{{ rails_env }}"
 
 upgrade_application() {
-        local action="${1:-reload}"
+  local action="${1:-reload}"
 
-        source script/rbenv-init.sh
-        rbenv install --skip-existing
-        ./script/install-bundler
+  echo "RAILS_ENV=$RAILS_ENV"
 
-        # Install the required gems
-        # Note: the 'LANG=en_US.UTF-8' is a fix for jquery-rails 1.0.17...fails even though server has correct locale setting
-        LANG="en_US.UTF-8" bundle --path "$HOME/.gem" --deployment --without "development" "test"
+  source script/rbenv-init.sh
+  ./script/rbenv-install.sh
+  ./script/install-bundler
 
-        ./script/precompile-assets
+  # Install the required gems
+  bundle --path "$HOME/.gem" --deployment --without "development" "test" | grep -v '^Using'
 
-        echo "Migrating database..."
-        bundle exec rake db:migrate
+  ./script/precompile-assets
 
-        # Configure CDN with Ansible
-        # upload all assets to the CDN
-        #echo Upload all assets to CDN live:upload_assets
-        #bundle exec rake live:upload_assets
+  echo "Migrating database (db:migrate)..."
+  bundle exec rake db:migrate
 
-        # TODO: make schedule server agnostic
-        # install required cron jobs
-        #bundle exec whenever --set 'environment=production' --update-crontab members.ceresfairfood.org.au
+  if [ "$RAILS_ENV" = "production" ]; then
+    echo "Upload public/assets/ to CDN (live:upload_assets)..."
+    bundle exec rake live:upload_assets
 
-        # Restart DJ workers
-        ./script/delayed_job restart
+    echo "Install schedule cron jobs (whenever)..."
+    # TODO: make schedule server agnostic
+    bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}"
+  fi
 
-	# Restart or reload unicorn
-        /etc/init.d/unicorn_fairfood "$action"
-        #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
+  # Restart DJ workers
+  ./script/delayed_job restart
+
+  # Restart or reload unicorn
+  echo "Unicorn $action..."
+  /etc/init.d/unicorn_fairfood "$action"
+  #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
+
+  echo "Update the static 500.html page for nginx..."
+  # Delete it first so that nginx is not delivering the old version:
+  rm public/500.html
+  # Then save the new version. Don't pipe it directly, because that will create the file before the request and nginx will deliver an empty file.
+  wget https://members.ceresfairfood.org.au/500 -O tmp/500.html 2>&1 | egrep 'saved|wget:' # reduce output to only include success or fail results.
+  mv tmp/500.html public/
 }
 
 while read oldrev newrev refname; do
-        if [ "$refname" = "refs/heads/master" ]; then
-                # Check if ruby changed
-                if git diff "$newrev" --name-only | grep -Fxq '.ruby-version'; then
-                        action="restart"
-                else
-                        action="reload"
-                fi
-                # Checkout the new revision
-                git reset --hard "$newrev"
-                upgrade_application "$action"
-        fi
+  echo "HEAD was at $oldrev"
+  if [ "$refname" = "refs/heads/master" ]; then
+  # Check if ruby or gems changed
+  if git diff --quiet "$newrev" -- ".ruby-version" "Gemfile.lock"; then
+    # no changes
+    action="reload"
+  else
+    # we need to start a new master process
+    action="upgrade"
+  fi
+  # Checkout the new revision
+  git reset --hard "$newrev"
+  upgrade_application "$action"
+  fi
 done
 
 exit 0
