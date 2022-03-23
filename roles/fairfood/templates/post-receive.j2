@@ -3,7 +3,7 @@
 # bash is needed to `source` rbenv stuff
 
 # Fail on any error
-#set -e # disabled because precompile-assets sometimes returns error exit code
+set -e
 
 # Go to the working tree
 cd "$GIT_DIR/.." || exit 1
@@ -27,7 +27,7 @@ upgrade_application() {
   # Install the required gems
   bundle --path "$HOME/.gem" --deployment --without "development" "test" | sed /^Using.*$/d
 
-  ./script/precompile-assets # sometimes returns error exit code
+  ./script/precompile-assets
 
   echo "Migrating database (db:migrate)..."
   bundle exec rake db:migrate
