@@ -15,7 +15,7 @@
     state: started
     enabled: yes
 
-- name: Create production database
+- name: Create fairfood database
   mysql_db:
     name: "{{ db_name }}"
     state: present
@@ -32,7 +32,7 @@
     dest: "/tmp/fairfood-init.sql"
   when: db_created.changed
 
-- name: Import initial data first time - first time only
+- name: Import initial data - first time only
   mysql_db:
     name: "{{ db_name }}"
     state: import

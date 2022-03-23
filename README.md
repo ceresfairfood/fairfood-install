@@ -11,6 +11,18 @@ sudo apt install ansible vagrant virt-manager
 systemctl start libvirtd
 ```
 
+If virt-manager doesn't work, try virtualbox.
+```sh
+# On macOS 10.15:
+brew install ansible vagrant virtualbox
+# Also for first-time setup, you'll need sshpass to enter the root password:
+brew install hudochenkov/sshpass/sshpass # 3rd party tap, check before using. Remove after using.
+```
+
+Add your public key to the repo to automatically set up authorised users, eg:
+
+    cat ~/.ssh/id_rsa.pub >> files/admin-ssh-keys/$USER.pub
+
 ## Test it locally
 
 First, update the initial schema file (files/fairfood_schema.sql). You can generate it from a dev environment or server 
@@ -22,6 +34,25 @@ ansible-playbook -i hosts -l vagrant site.yml
 
 # Login to debug:
 vagrant ssh
+
+# You may need to manually install the db client:
+# sudo apt-get install libmariadb-dev
+```
+
+Tips for testing individual changes:
+ * Go straight to specific task: `--start-at-task='<name of task>'`
+ * Run one at a time: `--step`
+
+ Eg: `ansible-playbook -i hosts -l vagrant-virtualbox site.yml --step --start-at-task='Install configuration files'`
+
+### Git Push
+To test the post-receive script, you can push from your local environment.
+
+```
+cd fairfood/
+git remote add vagrant ssh://members.ceresfairfood.org.au@localhost:2222/srv/members.ceresfairfood.org.au/current
+
+git push vagrant
 ```
 
 ## Community Roles
@@ -42,21 +73,38 @@ ansible-lint site.yml
 
 ## Setting up a new staging server
 
-Add the new server to the `hosts` file. Then run:
-
+1. Add the new server to the `hosts` file.
+2. Optionally add public key(s) to `files/admin-ssh-keys`
+3. Run playbook: `ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root --ask-pass` # root user password defaults to Rimu login
+  - If mysql isn't working, ensure it really did install: `sudo apt-get install libmariadb-dev`
+4. Push codebase and install app: `git push staging` (this must be done before loading data dump, to ensure any recently deleted tables are removed.)
+5. Load database, eg: 
 ```
-ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root
-ssh members.ceresfairfood.org.au@staging2.ceresfairfood.org.au -A
+ssh fairfood@staging2.ceresfairfood.org.au -A
 $ ssh staging.ceresfairfood.org.au "mysqldump -u root fairfood_production | gzip" > old_server.sql.gz
 $ zcat old_server.sql.gz | mysql fairfood_production
+```
 
-# Update the domain, then:
+If DNS is not pointing to this server yet, update it and obtain new certificate:
+```
 ssh root@staging2.ceresfairfood.org.au
 $ # Add server name to nginx config.
 $ certbot -d staging2.ceresfairfood.org.au -d staging.ceresfairfood.org.au --expand --renew-hook 'systemctl reload nginx'
-
-# Disable root login.
 ```
+
+Finally, **remember to disable root login.**
+```
+sudo vim /etc/ssh/sshd_config
+# PermitRootLogin no
+```
+
+## Repeatable tasks
+
+Most tasks are not designed to be repeated.
+
+The [add-users](files/admin-ssh-keys/README.md) playbook can be used to add new users.
+
+When running tasks as your own user, you need to include `--ask-become-pass` and provide your password.
 
 ## Installing Metabase
 

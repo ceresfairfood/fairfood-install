@@ -3,7 +3,7 @@
 app_name: fairfood
 app: "{{ app_name }}"
 
-app_user: "members.ceresfairfood.org.au"
+app_user: "fairfood"
 app_user_home: "/srv/{{ app_user }}"
 
 metabase_version: v0.39.3
@@ -30,7 +30,7 @@ rails_env: "staging"
 #----------------------------------------------------------------------
 # Database variables
 db_user: "fairfood"
-db_name: "fairfood_production"
+db_name: "fairfood_{{ rails_env }}"
 # Created with something like:
 #
 #   RAILS_ENV=staging ./bin/rails db:create db:schema:load
@@ -65,7 +65,7 @@ nginx_sites_available:
   default:
     - |
       listen 80 default_server deferred;
-      listen [::]:80 default_serve deferredr;
+      listen [::]:80 default_server deferred;
       server_name _;
       access_log off;
       # nginx code to close the connection without sending any data:

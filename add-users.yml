@@ -1,0 +1,9 @@
+---
+# Add any new users
+# See files/admin-ssh-keys/README.md
+
+- hosts: all
+
+  roles:
+    - role: admin-users
+      become: yes

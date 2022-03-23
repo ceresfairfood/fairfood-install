@@ -4,7 +4,7 @@
   apt:
     pkg:
     - certbot
-    - python-certbot-nginx
+    - python3-certbot-nginx
     state: "present"
 
 - name: Obtain certificate
