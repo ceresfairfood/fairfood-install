@@ -12,3 +12,7 @@ have to be named `username.pub` and can contain more than one key. Examples:
 Run the `add-users` playbook anytime to add new users:
 
     ansible-playbook -i hosts -l staging2.ceresfairfood.org.au add-users.yml --ask-become-pass
+
+New users will need to have a password set before they can sudo, eg:
+
+    sudo passwd maikel
