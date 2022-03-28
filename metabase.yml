@@ -13,14 +13,21 @@
     - staging
 
   roles:
+    - role: metabase-dependencies
+      become: yes
+
     - role: mysql
       become: yes
+
+    - role: certbot
+      become: yes
+      when: https |bool
 
     - role: libre_ops.metabase
       become: yes
       vars:
         # user and version are defined in all.yml
-        use_own_database: false
+        use_own_database: false # settings are saved in /home/metabase/metabase.db.*
 
     - role: jdauphant.nginx
       vars:

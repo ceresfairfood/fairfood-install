@@ -50,7 +50,7 @@ To test the post-receive script, you can push from your local environment.
 
 ```
 cd fairfood/
-git remote add vagrant ssh://members.ceresfairfood.org.au@localhost:2222/srv/members.ceresfairfood.org.au/current
+git remote add vagrant ssh://fairfood@localhost:2222/srv/fairfood/current
 
 git push vagrant
 ```
@@ -113,26 +113,14 @@ You can refer to defaults: https://github.com/libre-ops/metabase/blob/master/def
 
 Choose the latest version of Metabase by setting the variable in `all.yml`. 
 
-JDK is required, eg:
-
-```sh
-sudo apt update
-sudo apt install openjdk-11-jdk #(8 or later)
-```
-
 Use `metabase.yml` playbook, eg:
 ```sh
 ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
 ```
 
-Certificate was set up manually:
-```sh
-certbot certonly --nginx --email "maikel@openfoodnetwork.org.au" -d "metabase.ceresfairfood.org.au" --renew-hook "systemctl reload nginx"
-```
-
 Default login is example@example.com / metabase123
 
-Metabase config includes:
+Copy existing config database from another installation (eg from `/home/metabase/metabase.db.*`). Or config from scratch, including:
 
 1. Add MySQL database fairfood_metabase, user metabase, password (see `credentials/*/mysqlpassword`)
 2. Setup email to use localhost port 25, from metabase@metabase.ceresfairfood.org.au
