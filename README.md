@@ -138,14 +138,14 @@ Long term preparation:
 - [ ] test mail delivery from the new server
 - [ ] check timezone on new server
 - [ ] change DNS TTL to 5 minutes
+- [ ] set up new application to point to db on old server
 - [ ] enable database replication
-- [ ] test database replication surviving restarts
 
 ```
 # set up ufw with all rules, then:
 ufw allow from 43.239.97.146 to any port mysql
 
-# edit mysql/mariadb config
+# edit mysql/mariadb config (probably to allow network connections)
 # Warning: Debian can have multiple config files and only some are loaded
 
 # On the master:
@@ -153,6 +153,7 @@ mysql> CREATE USER 'fairfood'@'%' IDENTIFIED BY 'secret password';
      > GRANT ALL PRIVILEGES ON fairfood_production.* TO 'fairfood'@'%';
      > GRANT REPLICATION SLAVE ON *.* TO 'fairfood'@'%';
 mysqldump --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 fairfood_production > fairfood_production-for-replication.sql
+# Find out the MASTER_LOG_FILE and MASTER_LOG_POS
 head fairfood_production-for-replication.sql -n80 | grep "MASTER_LOG_FILE" > mysql-position
 gzip fairfood_production-for-replication.sql
 
@@ -162,10 +163,11 @@ mysql> CHANGE MASTER TO MASTER_HOST='43.239.97.8',MASTER_USER='fairfood',MASTER_
      > START SLAVE;
      > SHOW SLAVE STATUS \G
 ```
+- [ ] TODO: Test if new db writable? If so, make it readonly. (and update/remove this comment)
+- [ ] TODO: test database replication surviving restarts (if not, may need to find another way to permanently CHANGE MASTER TO...)
 
-Prepare new server:
-- [ ] deactivate git post-receive hook for deployments
-- [ ] deploy master to new server (start new application)
+Prepare:
+- [ ] deactivate old git post-receive hook for deployments
 
 ```
 # Tell other devs to not deploy to the old server:
@@ -173,6 +175,8 @@ echo "[ERROR] Aborting deploy!"
 echo "[Thu 8 Feb 2018] Maikel is about to switch to the new production server."
 exit 1
 ```
+- [ ] deploy master to new server (start new application)
+- [ ] test web application
 
 Switch delayed jobs:
 - [ ] deactivate monit for old delayed job
@@ -186,36 +190,43 @@ Switch application:
 - [ ] deactivate monit for old application
 - [ ] shut down the old application
 
-Switch cron jobs:
+Switch cron jobs when there is a gap in schedule:
 - [ ] clear cron jobs on old server
-- [ ] install cron jobs on new server
-- [ ] update post-receive hook to install cronjobs
+  - [ ] immediately install cron jobs on new server
+- [ ] update post-receive hook on new server to install cronjobs
 
 Expand Letsencrypt cert on new server:
-- [ ] Configure new nginx to listen do production domain
-- [ ] Forward http traffic from old to new server
-- [ ] /usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d members.ceresfairfood.org.au --expand
+- [ ] Configure new nginx to listen to production domain
+- [ ] Proxy pass http (not https) traffic from old to new server (so that letstencrypt can generate cert)
+- [ ] `/usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d members.ceresfairfood.org.au --expand`
 
 Switch databases:
-- [ ] check databases are in sync
-- [ ] make new mysql writable
-- [ ] change database.yml
+- [ ] check databases are in sync (eg check your user updated_at after visiting a page)
+- [ ] make new mysql db writable
+- [ ] change new database.yml to point to local db server
 - [ ] stop delayed job
+- [ ] confirm no other scheduled tasks currently running or about to run
+- [ ] Set old master to read-only
 - [ ] reload new application
 - [ ] make new mysql master `STOP SLAVE; RESET MASTER;`
 - [ ] start delayed job
 
 Finishing it off:
-- [ ] update post-receive hook on new server
-- [ ] install monit on new server
+- [ ] install monit on new server (copy config from old: /etc/monit/conf.d/rails-fairfood)
 - [ ] change DNS entry
 - [ ] copy TLS certificates
+- [ ] update post-receive hook on old server:
 
 ```
 # Tell other devs to deploy to the new server:
 echo "[ERROR] Aborting deploy!"
 echo "[Thu 15 Feb 2018] We have a new production server."
 echo ""
-echo "  git remote set-url production members.ceresfairfood.org.au@prod2.ceresfairfood.org.au:~/current"
+echo "  git remote set-url production fairfood@prod3.ceresfairfood.org.au:~/current"
 exit 1
 ```
+
+Finally:
+- [ ] Increase DNS TTL again
+- [ ] When no longer being used, shut down old server
+- [ ] Delete old server
