@@ -38,7 +38,8 @@ upgrade_application() {
 
     echo "Install schedule cron jobs (whenever)..."
     # TODO: make schedule server agnostic
-    bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}"
+    # uncomment once old prod server crontab is removed
+    # bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}"
   fi
 
   # Restart DJ workers
