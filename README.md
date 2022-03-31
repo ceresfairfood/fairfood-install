@@ -177,6 +177,7 @@ exit 1
 ```
 - [ ] deploy master to new server (start new application)
 - [ ] test web application
+- [ ] Update domain in new nginx config with production domain
 
 Switch delayed jobs:
 - [ ] deactivate monit for old delayed job
@@ -196,7 +197,6 @@ Switch cron jobs when there is a gap in schedule:
 - [ ] update post-receive hook on new server to install cronjobs
 
 Expand Letsencrypt cert on new server:
-- [ ] Configure new nginx to listen to production domain
 - [ ] Proxy pass http (not https) traffic from old to new server (so that letstencrypt can generate cert)
 - [ ] `/usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d members.ceresfairfood.org.au --expand`
 
