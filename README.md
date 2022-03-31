@@ -170,7 +170,6 @@ Prepare:
 - [ ] deactivate old git post-receive hook for deployments
 - [ ] deploy master to new server (start new application)
 - [ ] test web application
-- [ ] Update domain in new nginx config with production domain (`shop.ceresfairfood.org.au`)
 
 ```
 # Tell other devs to not deploy to the old server:
@@ -197,6 +196,7 @@ Switch cron jobs when there is a gap in schedule:
 - [ ] update post-receive hook on new server to install cronjobs
 
 Expand Letsencrypt cert on new server:
+- [ ] hardcode nginx http->https redirect on new server to `members.` (so we don't redirect to the wrong place before domain switchover) *
 - [ ] Proxy pass http (not https) traffic from old to new server (so that letstencrypt can generate cert)
 - [ ] `/usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d shop.ceresfairfood.org.au --expand`
 
@@ -213,8 +213,11 @@ Switch databases:
 
 Finishing it off:
 - [ ] install monit on new server (copy config from old: /etc/monit/conf.d/rails-fairfood)
-- [ ] change DNS entry
-- [ ] copy TLS certificates
+<!-- - [ ] change DNS entry -->
+<!-- - [ ] copy TLS certificates -->
+- [ ] new server: change http->https redirect on new server back to `$server_name` *
+- [ ] old server: change proxy pass to a temporary redirect (302) `members.` to `shop.` *
+- [ ] new server: add permanent redirect (301) `members.` to `shop.` (this will come into effect with DNS switch) *
 - [ ] update post-receive hook on new server:
 
 ```
@@ -227,6 +230,7 @@ exit 1
 ```
 
 Finally:
+- [ ] Switch `members.` DNS to point to new server *
 - [ ] Increase DNS TTL again
 - [ ] When no longer being used, shut down old server
 - [ ] Delete old server
