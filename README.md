@@ -177,8 +177,9 @@ exit 1
 Switch delayed jobs:
 - [ ] deactivate monit for old delayed job
 - [ ] stop old delayed job: `RAILS_ENV=production ./script/delayed_job stop`
-- [ ] start new delayed job: `RAILS_ENV=production ./script/delayed_job start`
-- [ ] monitor log file: `tail -f /srv/members.ceresfairfood.org.au/current/log/delayed_job.log`
+- [ ] ensure new delayed job running: `RAILS_ENV=production ./script/delayed_job start`
+- [ ] monitor log file: `tail -f /srv/fairfood/current/log/delayed_job.log`
+- [ ] update post-receive hook on new server to restart delayed job
 
 Switch application:
 - [ ] nginx proxy pass from old to new app

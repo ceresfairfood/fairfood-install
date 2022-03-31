@@ -43,7 +43,8 @@ upgrade_application() {
   fi
 
   # Restart DJ workers
-  ./script/delayed_job restart
+  # uncomment once old prod server delayed_job is stopped
+  # ./script/delayed_job restart
 
   # Restart or reload unicorn
   echo "Unicorn $action..."
