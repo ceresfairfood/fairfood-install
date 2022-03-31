@@ -170,6 +170,7 @@ Prepare:
 - [ ] deactivate old git post-receive hook for deployments
 - [ ] deploy master to new server (start new application)
 - [ ] test web application
+- [ ] Update domain in new nginx config with production domain (`shop.ceresfairfood.org.au`)
 
 ```
 # Tell other devs to not deploy to the old server:
@@ -196,7 +197,6 @@ Switch cron jobs when there is a gap in schedule:
 - [ ] update post-receive hook on new server to install cronjobs
 
 Expand Letsencrypt cert on new server:
-- [ ] Configure new nginx to listen to production domain
 - [ ] Proxy pass http (not https) traffic from old to new server (so that letstencrypt can generate cert)
 - [ ] `/usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d shop.ceresfairfood.org.au --expand`
 
