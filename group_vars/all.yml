@@ -18,7 +18,8 @@ log_path: "{{ current_path }}/log"
 pid_path: "{{ current_path }}/tmp/pids"
 sock_path: "{{ current_path }}/tmp/socks"
 
-#domain: "members.ceresfairfood.org.au"
+# During [prod switchover](README.md#switching-servers),
+# domain will be manually updated in nginx config, and new certs generated.
 domain: "{{ inventory_hostname }}"
 metabase_domain: "metabase.ceresfairfood.org.au"
 
