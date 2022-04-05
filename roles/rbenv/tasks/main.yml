@@ -58,19 +58,3 @@
     create: yes
   become: yes
   become_user: "{{ app_user }}"
-
-- name: install ruby
-  command: bash -lc "rbenv install --skip-existing {{ ruby_version }}"
-  args:
-    creates: "~/.rbenv/versions/{{ ruby_version }}"
-  become: yes
-  become_user: "{{ app_user }}"
-
-- name: Install bundler
-  # This needs to be run inside a bash shell to initialise rbenv
-  # See http://stackoverflow.com/questions/22115936/install-bundler-gem-using-ansible
-  command: bash -lc "RBENV_VERSION='{{ ruby_version }}' gem install bundler --no-ri --no-rdoc"
-  become: yes
-  become_user: "{{ app_user }}"
-  args:
-    creates: "~/.rbenv/shims/bundler"
