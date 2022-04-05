@@ -18,6 +18,12 @@
 
     - role: mysql
       become: yes
+      vars:
+        db_user: "{{ metabase_db_user }}"
+        db_privileges: "{{ metabase_db_privileges }}"
+        db_name: "{{ metabase_db_name }}"
+        app_user: "{{ metabase_user }}"
+        app_user_home: "{{ metabase_user_home }}"
 
     - role: certbot
       become: yes

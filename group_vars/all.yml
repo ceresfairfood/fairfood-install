@@ -8,6 +8,7 @@ app_user_home: "/srv/{{ app_user }}"
 
 metabase_version: v0.39.3
 metabase_user: "metabase"
+metabase_user_home: "/home/{{ metabase_user }}"
 
 app_root: "{{ app_user_home }}"
 current_path: "{{ app_root }}/current"
@@ -30,6 +31,7 @@ rails_env: "staging"
 #----------------------------------------------------------------------
 # Database variables
 db_user: "fairfood"
+db_privileges: "ALL"
 db_name: "fairfood_{{ rails_env }}"
 # Created with something like:
 #
@@ -40,8 +42,8 @@ mysql_data_file: "fairfood_schema.sql"
 
 # Metabase query database
 metabase_db_user: "metabase"
+metabase_db_privileges: "SELECT"
 metabase_db_name: "fairfood_metabase"
-metabase_data_file: "fairfood_schema.sql"
 
 #----------------------------------------------------------------------
 # Unicorn variables
