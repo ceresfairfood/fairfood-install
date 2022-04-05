@@ -71,7 +71,7 @@ After you changed code, it's nice to see if it's aligned with standards:
 ansible-lint site.yml
 ```
 
-## Setting up a new staging server
+## Setting up a new server
 
 1. Add the new server to the `hosts` file.
 2. Optionally add public key(s) to `files/admin-ssh-keys`
