@@ -21,6 +21,8 @@
 
     - role: certbot
       become: yes
+      vars:
+        domain: "{{ metabase_domain }}"
       when: https |bool
 
     - role: libre_ops.metabase

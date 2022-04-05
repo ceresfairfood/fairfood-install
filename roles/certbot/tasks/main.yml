@@ -7,16 +7,9 @@
     - python3-certbot-nginx
     state: "present"
 
-- name: Obtain main certificate
+- name: Obtain certificate
   command: >
     certbot certonly --nginx --email "{{ developer_email }}"
     --agree-tos -d "{{ domain }}" --renew-hook "systemctl reload nginx"
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}"
-
-- name: Obtain metabase certificate
-  command: >
-    certbot certonly --nginx --email "{{ developer_email }}"
-    --agree-tos -d "{{ metabase_domain }}" --renew-hook "systemctl reload nginx"
-  args:
-    creates: "/etc/letsencrypt/live/{{ metabase_domain }}"
