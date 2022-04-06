@@ -138,46 +138,70 @@ Long term preparation:
 - [ ] test mail delivery from the new server
 - [ ] check timezone on new server
 - [ ] change DNS TTL to 5 minutes
-- [ ] set up new application to point to db on old server
-- [ ] enable database replication
+- [ ] set up new rails app to point to db on old server
+  - Eg use a service with autossh to set up a persistent ssh tunnel (perhaps simpler than setting up mysql over network)
+  ```
+  $ vim /etc/systemd/system/autossh-mysql-tunnel.service
+  # https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-autossh/
+  [Unit]
+  Description=AutoSSH tunnel service prod2 MySQL on local port 3307
+  After=network.target
 
-```
-# set up ufw with all rules, then:
-ufw allow from 43.239.97.146 to any port mysql
+  [Service]
+  User=fairfood
+  Environment="AUTOSSH_GATETIME=0"
+  ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval=30" -o "ServerAliveCountMax=3" -o "ExitOnForwardFailure=yes" -NL 3307:localhost:3306 members.ceresfairfood.org.au@prod2.ceresfairfood.org.au
 
-# edit mysql/mariadb config (probably to allow network connections)
-# Warning: Debian can have multiple config files and only some are loaded
+  [Install]
+  WantedBy=multi-user.target
 
-# On the master:
-mysql> CREATE USER 'fairfood'@'%' IDENTIFIED BY 'secret password';
-     > GRANT ALL PRIVILEGES ON fairfood_production.* TO 'fairfood'@'%';
-     > GRANT REPLICATION SLAVE ON *.* TO 'fairfood'@'%';
-mysqldump --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 fairfood_production > fairfood_production-for-replication.sql
-# Find out the MASTER_LOG_FILE and MASTER_LOG_POS
-head fairfood_production-for-replication.sql -n80 | grep "MASTER_LOG_FILE" > mysql-position
-gzip fairfood_production-for-replication.sql
+  ## Ensure enabled after restart
+  sudo systemctl daemon-reload
+  sudo systemctl enable autossh-mysql-tunnel.service
+  sudo systemctl start autossh-mysql-tunnel.service
+  ```
+  - Requires that user `fairfood` on new server has public key authorised for remote user
+  - Confirm connection `mysql -h 127.0.0.1 -P 3307 -u fairfood -p fairfood_production`
+  - Update `config/database.yml`
+  ```
+  # old prod
+  password: "secret password"
+  host: 127.0.0.1 #force 'local' tcp
+  port: 3307 #ssh tunnel to old prod
+  ```
+- [ ] enable database replication from old db to new db
+  ```
+  # On the master:
+  mysql> CREATE USER 'fairfood_replication'@'%' IDENTIFIED BY 'secret password';
+     >   GRANT ALL PRIVILEGES ON fairfood_production.* TO 'fairfood_replication'@'%';
+     >   GRANT REPLICATION SLAVE ON *.* TO 'fairfood_replication'@'%';
+  sudo mysqldump -uroot --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 fairfood_production > /tmp/fairfood_production-for-replication.sql
+  # Find out the MASTER_LOG_FILE and MASTER_LOG_POS
+  head fairfood_production-for-replication.sql -n80 | grep "MASTER_LOG_FILE" > mysql-position
+  gzip fairfood_production-for-replication.sql
 
-# on the slave
-zcat fairfood_production-for-replication.sql | mysql
-mysql> CHANGE MASTER TO MASTER_HOST='43.239.97.8',MASTER_USER='fairfood',MASTER_PASSWORD='secret password', MASTER_LOG_FILE='mysql-bin.000002', MASTER_LOG_POS=106;
-     > START SLAVE;
-     > SHOW SLAVE STATUS \G
-```
-- [ ] TODO: Test if new db writable? If so, make it readonly. (and update/remove this comment)
-- [ ] TODO: test database replication surviving restarts (if not, may need to find another way to permanently CHANGE MASTER TO...)
+  # on the slave
+  zcat fairfood_production-for-replication.sql | mysql
+  mysql> CHANGE MASTER TO MASTER_HOST='127.0.0.1', MASTER_PORT=3307, MASTER_USER='fairfood_replication', MASTER_PASSWORD='jwOTZa7dsU.Ke1N', MASTER_LOG_FILE='mysql-bin.000123', MASTER_LOG_POS=366;
+     >   START SLAVE;
+     >   SHOW SLAVE STATUS \G
+     >   SET GLOBAL read_only = 1; --Ensure no accidental writes
+  ```
+    - confirm data flowing as expected (eg `select max(updated_at) from fairfood_production.users;`)
+    - confirm status again after system restart
 
 Prepare:
 - [ ] deactivate old git post-receive hook for deployments
-
-```
-# Tell other devs to not deploy to the old server:
-echo "[ERROR] Aborting deploy!"
-echo "[Thu 8 Feb 2018] Maikel is about to switch to the new production server."
-exit 1
-```
+  ```
+  # Tell other devs to not deploy to the old server:
+  echo "[ERROR] Aborting deploy!"
+  echo "[Thu 8 Feb 2018] Maikel is about to switch to the new production server."
+  exit 1
+  ```
 - [ ] deploy master to new server (start new application)
 - [ ] test web application
-- [ ] Update domain in new nginx config with production domain
+- [ ] Update domain in new nginx config with production domain (eg `vim /etc/nginx/sites-available/fairfood_https.conf`)
+  - You may test with a local hosts file (type `thisisunsafe` anywhere on the page in Chrome to bypass cert error)
 
 Switch delayed jobs:
 - [ ] deactivate monit for old delayed job
