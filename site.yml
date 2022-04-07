@@ -38,7 +38,7 @@
     - role: jdauphant.nginx
       vars:
         nginx_sites:
-          #default: "{{ nginx_sites_available.default }}"
+          default: "{{ nginx_sites_available.default }}"
           fairfood_http: "{{ nginx_sites_available.fairfood_http_to_https_redirect }}"
           fairfood_https: "{{ nginx_sites_available.fairfood_https }}"
       become: yes

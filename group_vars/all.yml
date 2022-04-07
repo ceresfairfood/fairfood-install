@@ -61,18 +61,27 @@ unicorn_timeout: 60
 #----------------------------------------------------------------------
 # nginx config
 #
-# Use of `deferred` delays handling a request until the client sent data.
+# Some `listen` params can only be applied once per port, so are applied in the default_servers.
+# Use of `deferred` param delays handling a request until the client sent data.
 
 nginx_sites_available:
   default:
     - |
-      listen 80 default_server deferred;
-      listen [::]:80 default_server deferred;
-      server_name _;
+      # Default port settings
+      listen 80 deferred default_server;
+      listen [::]:80 deferred;
+      listen 443 ssl deferred default_server;
+      listen [::]:443 ssl deferred default_server;
+
+      # Defaults for any server_names not specified elsewhere
+      # nginx requires a cert for ssl ports, even though we're not responding:
+      include snippets/snakeoil.conf; # self-signed certificate
+
       access_log off;
       # nginx code to close the connection without sending any data:
       return 444;
 
+  # Basic config for development environments only
   fairfood_http:
     - |
       listen 80 deferred;
@@ -110,8 +119,8 @@ nginx_sites_available:
 
   fairfood_http_to_https_redirect:
     - |
-      listen 80 deferred;
-      listen [::]:80 deferred;
+      listen 80;
+      listen [::]:80;
       server_name {{ domain }};
 
       add_header X-Content-Type-Options nosniff;
@@ -125,8 +134,8 @@ nginx_sites_available:
 
   fairfood_https:
     - |
-      listen 443 ssl deferred;
-      listen [::]:443 ssl deferred;
+      listen 443;
+      listen [::]:443;
       server_name {{ domain }};
       root "{{ current_path }}/public";
 
@@ -186,8 +195,8 @@ nginx_sites_available:
       }
   metabase_https:
     - |
-      listen 443 ssl;
-      # listen [::]:443 ssl;
+      listen 443;
+      # listen [::]:443;
       server_name {{ metabase_domain }};
 
       ssl_certificate      /etc/letsencrypt/live/{{ metabase_domain }}/fullchain.pem;
