@@ -1,10 +1,13 @@
 ---
 # Initialise the working directory
 
-- name: Authorise your SSH key to access the app user for push deploys
+- name: Authorise each admin SSH key to access the app user for push deploys
   authorized_key:
     user: "{{ app_user }}"
-    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_fileglob:
+    - "files/admin-ssh-keys/*.pub"
 
 - name: Create directory for Git repository
   file:
