@@ -134,8 +134,8 @@ nginx_sites_available:
 
   fairfood_https:
     - |
-      listen 443;
-      listen [::]:443;
+      listen 443 ssl;
+      listen [::]:443 ssl;
       server_name {{ domain }};
       root "{{ current_path }}/public";
 
