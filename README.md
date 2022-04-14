@@ -134,12 +134,12 @@ The following is a list of steps we have done the last time.
 Most steps are reversible, but not all (switching databases).
 The list is not complete, please do additional sanity checks where possible.
 
-Long term preparation:
+**Long term preparation:**
 - [ ] test mail delivery from the new server
 - [ ] check timezone on new server
 - [ ] change DNS TTL to 5 minutes
 - [ ] set up new rails app to point to db on old server
-  - Eg use a service with autossh to set up a persistent ssh tunnel (perhaps simpler than setting up mysql over network)
+  - Eg use a service with autossh to set up a persistent ssh tunnel (perhaps simpler than setting up mysql over network which may require restarting mysql)
   ```
   $ vim /etc/systemd/system/autossh-mysql-tunnel.service
   # https://www.everythingcli.org/ssh-tunnelling-for-fun-and-profit-autossh/
@@ -189,8 +189,10 @@ Long term preparation:
   ```
     - confirm data flowing as expected (eg `select max(updated_at) from fairfood_production.users;`)
     - confirm status again after system restart
+    - add old server password to .my.cnf on new server. So that script/enqueue can connect to old db temporarily.
+    - add IP address to [TXT](https://rimuhosting.com/dns/records.jsp?zone=ceresfairfood.org.au&type=TXT&rid=2) SPF record
 
-Prepare:
+**Prepare:**
 - [ ] deactivate old git post-receive hook for deployments
   ```
   # Tell other devs to not deploy to the old server:
@@ -199,46 +201,85 @@ Prepare:
   exit 1
   ```
 - [ ] deploy master to new server (start new application)
+  ```
+  git remote set-url production fairfood@prod3.ceresfairfood.org.au:~/current
+  git push production
+  ```
 - [ ] test web application
 - [ ] Update domain in new nginx config with production domain (eg `vim /etc/nginx/sites-available/fairfood_https.conf`)
   - You may test with a local hosts file (type `thisisunsafe` anywhere on the page in Chrome to bypass cert error)
 
-Switch delayed jobs:
-- [ ] deactivate monit for old delayed job
+**Switch delayed jobs:**
+- [ ] deactivate monit for old delayed job: `monit unmonitor fairfood_dj_worker`
 - [ ] stop old delayed job: `RAILS_ENV=production ./script/delayed_job stop`
 - [ ] ensure new delayed job running: `RAILS_ENV=production ./script/delayed_job start`
 - [ ] monitor log file: `tail -f /srv/fairfood/current/log/delayed_job.log`
 - [ ] update post-receive hook on new server to restart delayed job
 
-Switch application:
+**Switch application:**
 - [ ] nginx proxy pass from old to new app
-- [ ] deactivate monit for old application
+  ```
+    $ sudo vim /etc/nginx/sites-enabled/fairfood_https.conf
+
+    # TEMP: proxy pass all other traffic to new prod3 server
+    location ~ .* {
+      proxy_pass https://43.239.97.148;
+      proxy_ssl_name $host;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location @unicorn {
+    ...
+  ```
+- [ ] confirm emails are being sent out (check [ceresfairfood-history](https://groups.google.com/a/openfoodnetwork.org.au/g/ceresfairfood-history))
+- [ ] deactivate monit for old application `monit unmonitor -g unicorn_workers`
 - [ ] shut down the old application
 
-Switch cron jobs when there is a gap in schedule:
+**Switch cron jobs when there is a gap in schedule:**
 - [ ] clear cron jobs on old server
-  - [ ] immediately install cron jobs on new server
+  - [ ] immediately install cron jobs on new server `bundle exec whenever --set "environment=production" --update-crontab "fairfood"`
 - [ ] update post-receive hook on new server to install cronjobs
+- [ ] monitor log file after 5 mins to confirm: `tail -f /srv/fairfood/current/log/cron.stdout.log`
 
-Expand Letsencrypt cert on new server:
-- [ ] Proxy pass http (not https) traffic from old to new server (so that letstencrypt can generate cert)
-- [ ] `/usr/local/share/letsencrypt/env/bin/letsencrypt certonly -w /etc/letsencrypt/webrootauth/ -d prod2.ceresfairfood.org.au -d members.ceresfairfood.org.au --expand`
+**Expand Letsencrypt cert on new server:**
+- [ ] Proxy pass all http (not https) traffic from old to new server (so that letsencrypt can generate cert).
+  ```
+   #location '/.well-known/acme-challenge' {
+     #default_type "text/plain";
+     #root /etc/letsencrypt/webrootauth;
+   #}
 
-Switch databases:
-- [ ] check databases are in sync (eg check your user updated_at after visiting a page)
-- [ ] make new mysql db writable
-- [ ] change new database.yml to point to local db server
+   location / {
+     #return 301 https://$server_name$request_uri;
+     proxy_pass http://43.239.97.148;
+     proxy_set_header Host $host;
+     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+  ```
+- [ ] Expand existing certificate to include primary domain: `letsencrypt certonly --webroot -w /etc/letsencrypt/webrootauth -d prod3.ceresfairfood.org.au -d members.ceresfairfood.org.au --expand`
+
+**Switch databases:**
+- [ ] check databases are in sync
+  + `SHOW SLAVE STATUS \G`
+  + (eg on both: `mysql -e 'select @@server_id, @@read_only, max(updated_at) from fairfood_production.users;'`)
+- [ ] make new mysql db writable `SET GLOBAL read_only = 0;`
+- [ ] change new database.yml to point to local db server (confirm password is correct)
 - [ ] stop delayed job
 - [ ] confirm no other scheduled tasks currently running or about to run
-- [ ] Set old master to read-only
-- [ ] reload new application
-- [ ] make new mysql master `STOP SLAVE; RESET MASTER;`
+- [ ] Simultaneously:
+  + OLD: set master to read-only `SET GLOBAL read_only = 1;` (requires root. note this will affect any other DBs on the server, like Wordpress.)
+  + NEW: make new mysql master `STOP SLAVE; SET GLOBAL read_only = 0;` (requires root. turn off readonly again, to be sure)
+  + NEW: reload new application `/etc/init.d/unicorn_fairfood reload`
+  + Bugsnag will notify of any failed page loads during this period
+- [ ] udpate password in .my.cnf (for script/enqueue)
 - [ ] start delayed job
 
-Finishing it off:
+**Finishing it off:**
+- [ ] disable mysql readonly mode on old server if required (eg Wordpress)
 - [ ] on new server check `monit status`
 - [ ] change DNS entry
-- [ ] copy TLS certificates
+- [ ] set up Wormly metrics
 - [ ] update post-receive hook on old server:
 
 ```
@@ -250,7 +291,8 @@ echo "  git remote set-url production fairfood@prod3.ceresfairfood.org.au:~/curr
 exit 1
 ```
 
-Finally:
+**Finally:**
 - [ ] Increase DNS TTL again
-- [ ] When no longer being used, shut down old server
+- [ ] Stop and disable SSH tunnel: `autossh-mysql-tunnel.service`
+- [ ] When no longer being used, disable nginx & mysql on old server, and shut down.
 - [ ] Delete old server
