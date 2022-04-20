@@ -16,3 +16,11 @@
     line: "inet_interfaces = loopback-only"
     state: present
   notify: Reload postfix
+
+- name: Forward system messages to IT email address
+  lineinfile:
+    create: yes
+    dest: ~/.forward
+    regexp: "root"
+    line: "{{ email_it }}, /root/mailbox"
+    state: present
