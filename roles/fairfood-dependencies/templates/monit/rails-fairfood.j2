@@ -1,0 +1,43 @@
+check process fairfood_unicorn_worker_0
+  with pidfile {{ pid_path }}/unicorn.0.pid
+  start program = "/bin/cat /dev/null"
+  stop program = "/bin/bash -c '/bin/kill -QUIT `cat {{ pid_path }}/unicorn.0.pid`'"
+    with timeout 60 seconds
+  if mem is greater than 1000.0 MB for 3 cycles then restart
+
+  group unicorn_workers
+
+check process fairfood_unicorn_worker_1
+  with pidfile {{ pid_path }}/unicorn.1.pid
+  start program = "/bin/cat /dev/null"
+  stop program = "/bin/bash -c '/bin/kill -QUIT `cat {{ pid_path }}/unicorn.1.pid`'"
+    with timeout 60 seconds
+  if mem is greater than 1000.0 MB for 3 cycles then restart
+
+  group unicorn_workers
+
+check process fairfood_unicorn_worker_2
+  with pidfile {{ pid_path }}/unicorn.2.pid
+  start program = "/bin/cat /dev/null"
+  stop program = "/bin/bash -c '/bin/kill -QUIT `cat {{ pid_path }}/unicorn.2.pid`'"
+    with timeout 60 seconds
+  if mem is greater than 1000.0 MB for 3 cycles then restart
+
+  group unicorn_workers
+
+# To start delayed_job:
+# - Go to {{ app_user_home }}/current for rbenv to select the right ruby version
+# - Run {{ app_user_home }}/.rbenv/shims/ruby script/delayed_job -i 0 <command>
+# The `-i 0` means "identifier 0" to distinguish from other delayed_job processes.
+
+check process fairfood_dj_worker
+  with pidfile {{ pid_path }}/delayed_job.pid
+  start program = "/bin/bash -c 'export HOME={{ app_user_home }}; export PATH="$HOME/.rbenv/bin:$PATH"; eval "$(rbenv init -)"; cd $HOME/current && RAILS_ENV=production ./script/delayed_job start'"
+    as uid {{ app_user }} and gid {{ app_user }}
+    with timeout 60 seconds
+  stop program = "/bin/bash -c 'export HOME={{ app_user_home }}; export PATH="$HOME/.rbenv/bin:$PATH"; eval "$(rbenv init -)"; cd $HOME/current && RAILS_ENV=production ./script/delayed_job stop'"
+    as uid {{ app_user }} and gid {{ app_user }}
+    with timeout 60 seconds
+  if mem is greater than 600.0 MB for 3 cycles then restart # 120M
+
+  group dj_workers

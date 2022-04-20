@@ -236,7 +236,7 @@ Switch databases:
 - [ ] start delayed job
 
 Finishing it off:
-- [ ] install monit on new server (copy config from old: /etc/monit/conf.d/rails-fairfood)
+- [ ] on new server check `monit status`
 - [ ] change DNS entry
 - [ ] copy TLS certificates
 - [ ] update post-receive hook on old server:
