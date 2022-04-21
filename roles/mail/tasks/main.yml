@@ -16,11 +16,3 @@
     line: "inet_interfaces = loopback-only"
     state: present
   notify: Reload postfix
-
-- name: deactiveate tls for receiving locally
-  lineinfile:
-    dest: /etc/postfix/main.cf
-    regexp: "^smtpd_use_tls"
-    line: "smtpd_use_tls=no"
-    state: present
-  notify: Reload postfix
