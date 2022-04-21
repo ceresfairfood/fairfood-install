@@ -11,6 +11,8 @@ Add nginx config with this playbook, or manually add and reload.
 
 This adds to: `/etc/nginx/sites-available/nginx_status.conf`, links it in `sites-enabled` and reloads nginx.
 
+The nginx role also disables the `default` site which is not intended. TODO: merge this into the main
+
 Confirm:
 
     curl http://localhost:8081/nginx_status
