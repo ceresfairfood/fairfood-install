@@ -25,8 +25,8 @@ domain: "{{ inventory_hostname }}"
 metabase_domain: "metabase.ceresfairfood.org.au"
 
 https: false
-
 rails_env: "staging"
+email_it: "ceresfairfood+it@openfoodnetwork.org.au"
 
 #----------------------------------------------------------------------
 # Database variables
