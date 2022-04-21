@@ -45,15 +45,31 @@ Tips for testing individual changes:
 
  Eg: `ansible-playbook -i hosts -l vagrant-virtualbox site.yml --step --start-at-task='Install configuration files'`
 
+### Snapshots
+It's handy to take snapshots to quickly revert back to. Eg:
+
+```
+vagrant snapshot save 1-initial
+# later
+vagrant snapshot save 2-deployed
+# later
+vagrant snapshot save 3-app-installed
+# rollback
+vagrant snapshot restore 2-deployed
+```
+
 ### Git Push
 To test the post-receive script, you can push from your local environment.
 
+Vagrant requires use of a different ssh port. As a shortcut, add a new remote in your `fairfood` repository:
 ```
 cd fairfood/
 git remote add vagrant ssh://fairfood@localhost:2222/srv/fairfood/current
 
 git push vagrant
 ```
+
+Once installed, you should be able to access the web app: http://localhost:8080/
 
 ## Community Roles
 
