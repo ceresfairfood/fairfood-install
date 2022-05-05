@@ -8,9 +8,12 @@ Most steps are reversible, but not all (switching databases).
 The list is not complete, please do additional sanity checks where possible.
 
 **Long term preparation:**
-- [ ] test mail delivery from the new server
+- [ ] Prepare new server and add new DNS record (eg `prod4.ceresfairfood.org.au`)
+- [ ] Also add new server IP to SPF record
+- [ ] copy `.dkim.key` file from old prod rails root
+- [ ] test mail delivery and DKIM/SPF validation from the new server (eg with https://dkimvalidator.com)
 - [ ] check timezone on new server
-- [ ] change DNS TTL to 5 minutes
+- [ ] change DNS TTL to 5 minutes (ensure all DNS services are updated, eg Rimu and Rackspace)
 - [ ] set up new rails app to point to db on old server
   - Eg use a service with autossh to set up a persistent ssh tunnel (perhaps simpler than setting up mysql over network which may require restarting mysql)
   ```
@@ -169,3 +172,4 @@ exit 1
 - [ ] Stop and disable SSH tunnel: `autossh-mysql-tunnel.service`
 - [ ] When no longer being used, disable nginx & mysql on old server, and shut down.
 - [ ] Delete old server
+- [ ] Remove old server DNS record and remove from SPF record
