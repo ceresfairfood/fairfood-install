@@ -63,3 +63,8 @@
              git push {{ app_user }}@{{ inventory_hostname }}:{{ current_path }}
 
         ************************************************************************
+
+          Check output for DKIM keys to add to DNS.
+          Alternatively copy an existing key to /etc/opendkim/keys/mail.private
+
+        ************************************************************************

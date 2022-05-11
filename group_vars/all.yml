@@ -57,6 +57,17 @@ unicorn_workers: 3
 unicorn_timeout: 60
 
 
+#----------------------------------------------------------------------
+# Email variables
+# A new DKIM key will be generated, but it can be replaced with an
+# existing key by overwriting /etc/opendkim/keys/mail.private
+
+dkim_admin_email: "{{ email_it }}"
+dkim_selector: mail
+dkim_domains:
+  - "{{ domain }}"
+  - "ceresfairfood.org.au"
+dkim_same_key: true # generate one key for both domains
 
 #----------------------------------------------------------------------
 # nginx config

@@ -17,6 +17,9 @@
     - role: mail
       become: yes
 
+    - role: sunfoxcz.dkim
+      become: yes
+
     - role: mysql
       become: yes
 
