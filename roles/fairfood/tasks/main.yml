@@ -47,12 +47,24 @@
     - { src: "post-receive.j2", dest: "{{ build_path }}/.git/hooks/post-receive" }
     - { src: "database.yml.j2", dest: "{{ config_path }}/database.yml" }
 
-- name: Commands to deploy
-  vars:
-    msg: |
+- name: Final notes
+  pause:
+    seconds: 1
+    prompt: |
+
+
+
+
+        FINAL NOTES ************************************************************
+
          {{ inventory_hostname }} is now ready for deployments via `git push`.
          You can now go to your fairfood git repository and deploy:
 
              git push {{ app_user }}@{{ inventory_hostname }}:{{ current_path }}
-  debug:
-    msg: "{{ msg.split('\n') }}"
+
+        ************************************************************************
+
+          Check output for DKIM keys to add to DNS.
+          Alternatively copy an existing key to /etc/opendkim/keys/mail.private
+
+        ************************************************************************

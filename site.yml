@@ -17,6 +17,9 @@
     - role: mail
       become: yes
 
+    - role: sunfoxcz.dkim
+      become: yes
+
     - role: mysql
       become: yes
 
@@ -46,6 +49,3 @@
     - role: fairfood
       become: yes
       become_user: "{{ app_user }}"
-
-    - role: nginx
-      become: yes

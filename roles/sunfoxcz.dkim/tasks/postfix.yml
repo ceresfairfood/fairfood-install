@@ -1,0 +1,28 @@
+---
+## Postfix configuration for OpenDKIM messages signing integration
+
+- name: postfix is installed
+  apt:
+    pkg: postfix
+    state: present
+  tags: postfix
+
+- name: opendkim configuration as a postfix milter
+  lineinfile:
+    path: '{{ dkim_postfix_config_file }}'
+    regexp: "^{{ dkim_postfix_config_line.parameter }}"
+    line: "{{ dkim_postfix_config_line.parameter }} = {{ dkim_postfix_config_line.value }}"
+    backup: yes
+  loop: "{{ dkim_postfix_config }}"
+  loop_control:
+    loop_var: dkim_postfix_config_line
+  tags: postfix
+
+- name: postfix is running
+  service: 
+    name: postfix 
+    state: started
+    enabled: yes
+  tags: postfix
+
+...
