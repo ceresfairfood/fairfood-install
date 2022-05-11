@@ -1,4 +1,6 @@
 ---
-# These have been used with Ansible 2.3.0
+# These have been used with Ansible 2.11.6
 - src: jdauphant.nginx
   version: v2.21.2
+- src: sunfoxcz.dkim
+  version: v1.1.0
