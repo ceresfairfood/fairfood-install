@@ -10,8 +10,8 @@ The list is not complete, please do additional sanity checks where possible.
 **Long term preparation:**
 - [ ] Prepare new server and add new DNS record (eg `prod4.ceresfairfood.org.au`)
 - [ ] Also add new server IP to SPF record
-- [ ] copy `.dkim.key` file from old prod rails root
-- [ ] test mail delivery and DKIM/SPF validation from the new server (eg with https://dkimvalidator.com)
+- [ ] test mail delivery and DKIM/SPF validation from the new server (eg with https://dkimvalidator.com). Update as needed.
+  - It's suggested to use a new DKIM key when upgrading prod. You'll need to copy the key to staging and old prod to ensure they can still send from the same domain.
 - [ ] check timezone on new server
 - [ ] change DNS TTL to 5 minutes (ensure all DNS services are updated, eg Rimu and Rackspace)
 - [ ] set up new rails app to point to db on old server
