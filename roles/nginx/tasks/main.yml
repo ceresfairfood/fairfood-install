@@ -1,0 +1,15 @@
+---
+# Check config and report to wormly if invalid.
+# This ensures we are always ready to start nginx in the event of a system restart.
+
+- name: Install nginx config check script
+  template:
+    src: "check-nginx.sh.j2"
+    dest: "/root/check-nginx.sh"
+    mode: 0751
+
+- name: Cron job to check nginx config
+  ansible.builtin.cron:
+    name: "check nginx config"
+    minute: "37" # randomly chosen uneventful time of the hour
+    job: "/root/check-nginx.sh"

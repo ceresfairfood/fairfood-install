@@ -46,6 +46,9 @@
       become: yes
       when: https |bool
 
+    - role: nginx
+      become: yes
+
     - role: fairfood
       become: yes
       become_user: "{{ app_user }}"
