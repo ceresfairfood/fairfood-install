@@ -14,6 +14,7 @@ The list is not complete, please do additional sanity checks where possible.
   - It's suggested to use a new DKIM key when upgrading prod. You'll need to copy the key to staging and old prod to ensure they can still send from the same domain.
 - [ ] check timezone on new server
 - [ ] change DNS TTL to 5 minutes (ensure all DNS services are updated, eg Rimu and Rackspace)
+- [ ] Identify any current config that may need to be included (eg cron jobs)
 - [ ] set up new rails app to point to db on old server
   - Eg use a service with autossh to set up a persistent ssh tunnel (perhaps simpler than setting up mysql over network which may require restarting mysql)
   ```

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Test nginx config
+/usr/sbin/nginx -tq
+
+{% if wormly_hostid is defined and wormly_hostid|length %}
+# Post result to wormly
+/usr/bin/curl --silent -d "nginx-config-failed=$?" https://metrics.wormly.com/v1.0/wDB2jb8z/{{ wormly_hostid }} > /dev/null
+{% endif %}
