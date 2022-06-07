@@ -16,7 +16,7 @@ APP_ROOT="$(pwd)"
 export RAILS_ENV="{{ rails_env }}"
 
 upgrade_application() {
-  local action="${1:-reload}"
+  local action="${1:-upgrade}"
 
   echo "RAILS_ENV=$RAILS_ENV"
 
@@ -62,17 +62,9 @@ upgrade_application() {
 while read oldrev newrev refname; do
   echo "HEAD was at $oldrev"
   if [ "$refname" = "refs/heads/master" ]; then
-  # Check if ruby or gems changed
-  if git diff --quiet "$newrev" -- ".ruby-version" "Gemfile.lock"; then
-    # no changes
-    action="reload"
-  else
-    # we need to start a new master process
-    action="upgrade"
-  fi
-  # Checkout the new revision
-  git reset --hard "$newrev"
-  upgrade_application "$action"
+    # Checkout the new revision
+    git reset --hard "$newrev"
+    upgrade_application
   fi
 done
 
