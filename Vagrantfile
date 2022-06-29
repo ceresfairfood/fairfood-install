@@ -20,6 +20,10 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 443, host: 4433
   config.vm.network "forwarded_port", guest: 3000, host: 3001 # Metabase (bypass nginx)
 
+  # Use a shared private key for all providers.
+  #   ~/.vagrant.d/insecure_private_key
+  config.ssh.insert_key = false
+
   config.vm.provider :libvirt do |box|
     box.memory = 1536
     box.nic_model_type = "virtio"
