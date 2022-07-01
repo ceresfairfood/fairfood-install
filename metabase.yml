@@ -9,7 +9,6 @@
 - name: Install Metabase
   hosts:
     - vagrant
-    - vagrant-virtualbox
     - staging
 
   roles:

@@ -5,7 +5,6 @@
 - name: nginx_status for collectd-wormly
   hosts:
     - vagrant
-    - vagrant-virtualbox
     - staging
     - production # This was exected on prod but failed due to invalid config in fairfood_beta. Manually completed after disabling fairfood_beta.
 

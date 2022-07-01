@@ -43,7 +43,7 @@ Tips for testing individual changes:
  * Go straight to specific task: `--start-at-task='<name of task>'`
  * Run one at a time: `--step`
 
- Eg: `ansible-playbook -i hosts -l vagrant-virtualbox site.yml --step --start-at-task='Install configuration files'`
+ Eg: `ansible-playbook -i hosts -l vagrant site.yml --step --start-at-task='Install configuration files'`
 
 ### Snapshots
 It's handy to take snapshots to quickly revert back to. Eg:
