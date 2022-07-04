@@ -25,7 +25,10 @@ upgrade_application() {
   ./script/install-bundler
 
   # Install the required gems
-  bundle --path "$HOME/.gem" --deployment --without "development" "test" | grep -v '^Using'
+  bundle config set --local deployment "true"
+  bundle config set --local path "$HOME/.gem"
+  bundle config set --local without "development test"
+  bundle install | grep -v '^Using'
 
   ./script/precompile-assets
 
