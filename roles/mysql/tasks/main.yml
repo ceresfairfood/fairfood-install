@@ -12,7 +12,7 @@
 - name: Enable mariadb error logging
   lineinfile:
     dest: /etc/mysql/mariadb.conf.d/50-server.cnf
-    regexp: "^log_error ?="
+    regexp: "^#?log_error ?="
     line: "log_error = /var/log/mysql/error.log"
     state: present
 
