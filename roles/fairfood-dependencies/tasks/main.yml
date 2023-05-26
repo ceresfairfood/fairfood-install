@@ -28,6 +28,8 @@
     - memcached
     - monit
     - nginx
+    # For Ruby 3.2
+    - libyaml-dev
     # For the mysql2 gem
     - libmariadb-dev
     # For mimemagic / paperclip
