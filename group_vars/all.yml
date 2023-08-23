@@ -54,7 +54,7 @@ unicorn_log: "{{ log_path }}/unicorn.log"
 unicorn_pid: "{{ pid_path }}/unicorn.pid"
 unicorn_sock: "{{ sock_path }}/unicorn.sock"
 unicorn_workers: 3
-unicorn_timeout: 60
+unicorn_timeout: 140 # Allow SecurePay transactions to take up to 120 seconds
 
 
 #----------------------------------------------------------------------
