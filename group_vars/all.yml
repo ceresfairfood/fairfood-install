@@ -116,6 +116,7 @@ nginx_sites_available:
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_redirect off;
         proxy_pass http://unicorn;
+        proxy_read_timeout {{ unicorn_timeout + 1 }};
       }
 
       location ~ ^/(assets)/ {
@@ -183,6 +184,7 @@ nginx_sites_available:
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_redirect off;
         proxy_pass http://unicorn;
+        proxy_read_timeout {{ unicorn_timeout + 1 }};
       }
 
       location ~ ^/(assets)/ {
