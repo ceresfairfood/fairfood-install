@@ -8,7 +8,7 @@ stderr_path "{{ unicorn_log }}"
 stdout_path "{{ unicorn_log }}"
 
 # Set shim for picking up new rubies when upgrading:
-Unicorn::HttpServer::START_CTX[0] = "{{ current_path }}/script/unicorn"
+# Unicorn::HttpServer::START_CTX[0] = "{{ current_path }}/script/unicorn" # Currently not working
 
 listen "{{ unicorn_sock }}", backlog: 128
 worker_processes {{ unicorn_workers }}
