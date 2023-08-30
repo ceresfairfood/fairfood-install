@@ -10,6 +10,7 @@
     group={{ item.group }}
   become: yes
   with_items:
+    # Any updates to the unicorn init script need to be reloaded: systemctl daemon-reload
     - { src: "unicorn_init.j2", dest: "/etc/init.d/unicorn_{{ app }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
     - { src: "unicorn.rb.j2", dest: "{{ unicorn_config }}", mode: "0744", owner: "{{ unicorn_user }}", group: "{{ unicorn_user }}" }
   notify:
