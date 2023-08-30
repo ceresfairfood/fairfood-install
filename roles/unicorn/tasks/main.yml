@@ -17,6 +17,7 @@
 
 - name: enable unicorn at boot
   service:
+    daemon_reload=yes # Ensure unicorn init script is reloaded
     name=unicorn_{{ app }}
     enabled=yes
   become: yes
