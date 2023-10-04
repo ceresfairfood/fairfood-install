@@ -7,6 +7,8 @@
     - role: admin-users
       become: yes
 
+    - role: config
+
     - role: fairfood-dependencies
       become: yes
 
