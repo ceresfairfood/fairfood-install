@@ -168,6 +168,10 @@ nginx_sites_available:
       add_header X-Frame-Options DENY;
       add_header Strict-Transport-Security "max-age=31536000";
 
+      # Allow CORS with whitelisted domains
+      add_header Access-Control-Allow-Origin $allow_origin; # See map allow_origin defined below
+      add_header Vary Origin; # indicates that responses differ based on the value of the Origin request header.
+
       gzip on;
       gzip_disable "msie6";
 
@@ -268,3 +272,12 @@ nginx_configs:
     # For running Unicorn behind nginx, it is recommended to set “fail_timeout=0” for in your nginx configuration
     # https://www.rubydoc.info/gems/unicorn/Unicorn%2FConfigurator:timeout
     - upstream unicorn { server unix:{{ unicorn_sock }} fail_timeout=0; }
+
+  upgrade:
+    - |
+      # Whitelist for any subdomains and local dev
+      map $http_origin $allow_origin {
+        ~^https?://(.*\.)?ceresfairfood.org.au(:\d+)?$ $http_origin;
+        ~^https?://(.*\.)?localhost(:\d+)?$ $http_origin;
+        default "";
+      }
