@@ -23,6 +23,21 @@ Add your public key to the repo to automatically set up authorised users, eg:
 
     cat ~/.ssh/id_rsa.pub >> files/admin-ssh-keys/$USER.pub
 
+### LXC, LXD or Incus
+
+On Linux, you can also use a more lightweight container system.
+
+```sh
+apt install lxd
+lxc remote set-url images https://images.lxd.canonical.com
+lxc launch images:debian/11 cff
+lxc config device add cff cffport1122 proxy listen=tcp:0.0.0.0:1122 connect=tcp:127.0.0.1:22
+lxc config device add cff cffport1443 proxy listen=tcp:0.0.0.0:1443 connect=tcp:127.0.0.1:443
+lxc exec cff apt install ssh python3-apt cron
+lxc exec cff ssh-keygen
+lxc exec cff -- sh -c 'cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
+```
+
 ## Test it locally
 
 First, update the initial schema file (files/fairfood_schema.sql). You can generate it from a dev environment or server 
