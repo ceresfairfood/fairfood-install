@@ -46,15 +46,7 @@
   with_items:
     - { src: "post-receive.j2", dest: "{{ build_path }}/.git/hooks/post-receive" }
     - { src: "database.yml.j2", dest: "{{ config_path }}/database.yml" }
-
-- name: Configure Bundler
-  shell:
-    chdir: "{{ build_path }}"
-    cmd: |
-      bundle config set --local deployment "true"
-      bundle config set --local path "$HOME/.gem"
-      bundle config set --local without "development test code_quality"
-      bundle config set --local suppress_install_using_messages "true"
+    - { src: "bundle-config.j2", dest: "{{ build_path }}/.bundle/config" }
 
 - name: Final notes
   pause:
