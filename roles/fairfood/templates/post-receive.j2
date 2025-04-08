@@ -27,7 +27,7 @@ upgrade_application() {
   # Install the required gems
   bundle config set --local deployment "true"
   bundle config set --local path "$HOME/.gem"
-  bundle config set --local without "development test"
+  bundle config set --local without "development test code_quality"
   bundle config set --local suppress_install_using_messages "true"
   bundle install
 
