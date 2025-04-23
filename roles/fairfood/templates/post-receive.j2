@@ -25,10 +25,6 @@ upgrade_application() {
   ./script/install-bundler
 
   # Install the required gems
-  bundle config set --local deployment "true"
-  bundle config set --local path "$HOME/.gem"
-  bundle config set --local without "development test"
-  bundle config set --local suppress_install_using_messages "true"
   bundle install
 
   ./script/precompile-assets
