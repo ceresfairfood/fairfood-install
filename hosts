@@ -8,7 +8,6 @@ vagrant ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_ss
 
 [staging]
 staging.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
-staging2.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au
 
 [production]
 prod3.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au wormly_hostid=44367 rails_env=production

@@ -45,7 +45,7 @@ environment. This will be loaded only the first time you run ansible on the serv
 
 ```sh
 vagrant up
-ansible-playbook -i hosts -l vagrant site.yml
+ansible-playbook -l vagrant site.yml
 
 # Login to debug:
 vagrant ssh
@@ -58,7 +58,7 @@ Tips for testing individual changes:
  * Go straight to specific task: `--start-at-task='<name of task>'`
  * Run one at a time: `--step`
 
- Eg: `ansible-playbook -i hosts -l vagrant site.yml --step --start-at-task='Install configuration files'`
+ Eg: `ansible-playbook -l vagrant site.yml --step --start-at-task='Install configuration files'`
 
 ### Snapshots
 It's handy to take snapshots to quickly revert back to. Eg:
@@ -106,7 +106,7 @@ ansible-lint site.yml
 
 1. Add the new server to the `hosts` file.
 2. Optionally add public key(s) to `files/admin-ssh-keys`
-3. Run playbook: `ansible-playbook -i hosts -l staging2.ceresfairfood.org.au site.yml -u root --ask-pass` # root user password defaults to Rimu login
+3. Run playbook: `ansible-playbook -l staging2.ceresfairfood.org.au site.yml -u root --ask-pass` # root user password defaults to Rimu login
   - If mysql isn't working, ensure it really did install: `sudo apt-get install libmariadb-dev`
 4. Push codebase and install app: `git push staging` (this must be done before loading data dump, to ensure any recently deleted tables are removed.)
 5. Load database, eg: 
@@ -146,7 +146,7 @@ Choose the latest version of Metabase by setting the variable in `all.yml`.
 
 Use `metabase.yml` playbook, eg:
 ```sh
-ansible-playbook metabase.yml -i hosts -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
+ansible-playbook metabase.yml -l staging2.ceresfairfood.org.au --ask-become-pass --user <remote-user>
 ```
 
 Default login is example@example.com / metabase123
