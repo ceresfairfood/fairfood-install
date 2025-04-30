@@ -57,6 +57,9 @@ upgrade_application() {
   # Then save the new version. Don't pipe it directly, because that will create the file before the request and nginx will deliver an empty file.
   wget --content-on-error https://members.ceresfairfood.org.au/500 -O tmp/500.html 2>&1 | egrep -i 'sav|wget:' # reduce output to only include success or fail results.
   mv tmp/500.html public/
+
+  echo "Cleaning up old gems..."
+  bundle clean
 }
 
 while read oldrev newrev refname; do
