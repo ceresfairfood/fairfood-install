@@ -46,10 +46,9 @@ upgrade_application() {
   # uncomment once old prod server delayed_job is stopped
   # ./script/delayed_job restart
 
-  # Restart or reload unicorn
+  # Restart puma (but can it choose to reload for most cases?)
   echo "Unicorn $action..."
-  /etc/init.d/unicorn_fairfood "$action"
-  #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
+  sudo systemctl restart puma-fairfood
 
   echo "Update the static 500.html page for nginx..."
   # Delete it first so that nginx is not delivering the old version:
