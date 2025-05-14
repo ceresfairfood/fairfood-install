@@ -1,0 +1,22 @@
+# Puma server configuration; manged via fairfood-install.
+
+# Note: workers are forked webserver processes. If using threads and workers together
+# the concurrency of the application would be max `threads` * `workers`.
+workers {{ puma_workers }}
+threads {{ puma_threads }}, {{ puma_threads }}
+
+directory "{{ current_path }}"
+pidfile "{{ puma_pid }}"
+state_path "{{ puma_state }}"
+environment "{{ rails_env }}"
+bind "unix://{{ puma_sock }}"
+
+stdout_redirect "{{ puma_log }}", "{{ puma_log }}", true
+
+if ["production", "staging"].include?(ENV["RAILS_ENV"])
+  # Apply the latest performance-enhancing features
+  prune_bundler
+  wait_for_less_busy_worker
+  fork_worker
+  preload_app! false
+end
