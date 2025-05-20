@@ -50,7 +50,7 @@ upgrade_application() {
   fi
 
   echo "Restart puma..."
-  sudo systemctl restart puma-fairfood
+  bundle exec pumactl restart # Hot restart helps reduce downtime
 
   echo "Update the static 500.html page for nginx..."
   generate_500_page
