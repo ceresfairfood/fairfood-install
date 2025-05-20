@@ -1,0 +1,2 @@
+# app user needs passwordless sudo for concrete commands
+{{ app_user }} ALL=(ALL) NOPASSWD: /bin/systemctl start puma-{{ app }}.service, /bin/systemctl stop puma-{{ app }}.service, /bin/systemctl restart puma-{{ app }}.service,  /bin/systemctl reload puma-{{ app }}.service

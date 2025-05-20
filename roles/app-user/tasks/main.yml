@@ -12,3 +12,10 @@
     password: "*"
     update_password: on_create
   become: yes
+
+- name: Create sudoers configuration for app user
+  become: true
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ app_user }}"
+    mode: 0440
