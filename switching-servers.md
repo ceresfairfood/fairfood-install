@@ -9,6 +9,7 @@ The list is not complete, please do additional sanity checks where possible.
 
 **Long term preparation:**
 - [ ] Prepare new server and add new DNS record (eg `prod4.ceresfairfood.org.au`)
+  - Add `background_jobs=false` to new hosts entry to ensure that cron jobs and delayed_job are disabled.
 - [ ] Also add new server IP to SPF record
 - [ ] test mail delivery and DKIM/SPF validation from the new server (eg with https://dkimvalidator.com). Update as needed.
   - It's suggested to use a new DKIM key when upgrading prod. You'll need to copy the key to staging and old prod to ensure they can still send from the same domain.

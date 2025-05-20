@@ -57,3 +57,4 @@
     - role: fairfood
       become: yes
       become_user: "{{ app_user }}"
+      tags: fairfood

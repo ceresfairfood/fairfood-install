@@ -26,6 +26,7 @@ metabase_domain: "metabase.ceresfairfood.org.au"
 
 https: false
 rails_env: "staging"
+background_jobs: "true" # whether to enable cron jobs (whenever) and delayed jobs
 email_it: "ceresfairfood+it@openfoodnetwork.org.au"
 
 #----------------------------------------------------------------------
