@@ -13,6 +13,7 @@
       become: yes
 
     - role: app-user
+      tags: app-user
 
     - role: rbenv
 
