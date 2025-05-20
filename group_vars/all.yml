@@ -277,9 +277,7 @@ nginx_events_params:
 
 nginx_configs:
   upstream:
-    # For running Unicorn behind nginx, it is recommended to set “fail_timeout=0” for in your nginx configuration
-    # https://www.rubydoc.info/gems/unicorn/Unicorn%2FConfigurator:timeout
-    - upstream unicorn { server unix:{{ unicorn_sock }} fail_timeout=0; }
+    - upstream unicorn { server unix:{{ unicorn_sock }}; }
 
   upgrade:
     - |
