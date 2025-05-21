@@ -49,10 +49,8 @@ upgrade_application() {
     ./script/delayed_job restart
   fi
 
-  # Restart or reload unicorn
-  echo "Unicorn $action..."
-  /etc/init.d/unicorn_fairfood "$action"
-  #/etc/init.d/unicorn_fairfood stop && while /etc/init.d/unicorn_fairfood start 2>&1 | grep -Fxq "Already running"; do sleep 0.1; done
+  echo "Restart puma..."
+  bundle exec pumactl restart # Hot restart helps reduce downtime
 
   echo "Update the static 500.html page for nginx..."
   generate_500_page
