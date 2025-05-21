@@ -1,0 +1,25 @@
+[Unit]
+Description=Puma HTTP Server
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+
+WorkingDirectory={{ current_path }}
+PIDFile={{ puma_pid }}
+Environment=BUNDLE_GEMFILE={{ current_path }}/Gemfile
+
+# Helpful for debugging socket activation, etc.
+# Environment=PUMA_DEBUG=1
+
+ExecStart=/bin/bash -lc "bundle exec --keep-file-descriptors puma -C {{ puma_config }}"
+ExecReload=/bin/bash -lc "bundle exec pumactl phased-restart -S {{ puma_state }}"
+
+SyslogIdentifier=puma
+Restart=on-failure
+RestartSec=30s
+TimeoutSec=30s
+
+[Install]
+WantedBy=multi-user.target
