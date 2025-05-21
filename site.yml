@@ -38,7 +38,7 @@
           fairfood: "{{ nginx_sites_available.fairfood_http }}"
       become: yes
       when: not https
-      tag: nginx
+      tags: nginx
 
     - role: jdauphant.nginx
       vars:
@@ -48,12 +48,13 @@
           fairfood_https: "{{ nginx_sites_available.fairfood_https }}"
       become: yes
       when: https |bool
-      tag: nginx
+      tags: nginx
 
     - role: nginx
       become: yes
-      tag: nginx
+      tags: nginx
 
     - role: fairfood
       become: yes
       become_user: "{{ app_user }}"
+      tags: fairfood
