@@ -1,0 +1,4 @@
+---
+- name: "restart puma"
+  service: name=puma-{{ app }} state=restarted
+  become: yes

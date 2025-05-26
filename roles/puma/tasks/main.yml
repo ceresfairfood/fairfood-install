@@ -15,6 +15,7 @@
     - { src: "puma.rb.j2", dest: "{{ puma_config }}" }
   notify:
     - restart nginx
+    - restart puma
 
 - name: enable puma at boot
   service:
