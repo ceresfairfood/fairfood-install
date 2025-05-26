@@ -13,10 +13,8 @@ bind "unix://{{ puma_sock }}"
 
 stdout_redirect "{{ puma_log }}", "{{ puma_log }}", true
 
-if ["production", "staging"].include?(ENV["RAILS_ENV"])
-  # Apply the latest performance-enhancing features
-  prune_bundler
-  wait_for_less_busy_worker
-  fork_worker
-  preload_app! false
-end
+# Apply the latest performance-enhancing features
+prune_bundler
+wait_for_less_busy_worker
+fork_worker
+preload_app! false
