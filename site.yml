@@ -1,5 +1,6 @@
 ---
-# The main playbook to install Ceres Fair Food on a server
+# The main playbook to install Ceres Fair Food on a server.
+# Warning, this will overwrite any manual changes to config on the server.
 
 - hosts: all
 
@@ -33,6 +34,7 @@
     - role: certbot
       become: yes
       when: https |bool
+      tags: certbot
 
     - role: jdauphant.nginx
       vars:
