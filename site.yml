@@ -13,6 +13,7 @@
       become: yes
 
     - role: app-user
+      tags: app-user
 
     - role: rbenv
 
@@ -25,8 +26,9 @@
     - role: mysql
       become: yes
 
-    - role: unicorn
+    - role: puma
       become: yes
+      tags: puma
 
     - role: certbot
       become: yes
