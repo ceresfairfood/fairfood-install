@@ -288,6 +288,7 @@ nginx_configs:
       }
 
   geoip:
-    - geoip2 /var/lib/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
-    - map $geoip2_data_country_iso_code  $geo_outside_aus { default "outside"; AU ""; }
-    - limit_req_zone $geo_outside_aus zone=overseas:10m rate=150r/m;
+    - |
+      geoip2 /var/lib/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
+      map $geoip2_data_country_iso_code  $geo_outside_aus { default "outside"; AU ""; }
+      limit_req_zone $geo_outside_aus zone=overseas:10m rate=150r/m;
