@@ -33,6 +33,7 @@
     - role: certbot
       become: yes
       when: https |bool
+      tags: certbot
 
     - role: jdauphant.nginx
       vars:
