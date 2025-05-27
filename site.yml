@@ -42,6 +42,7 @@
     # Otherwise the nginx config is not valid.
     - role: geolimit
       become: yes
+      tags: geolimit
 
     - role: jdauphant.nginx
       vars:
