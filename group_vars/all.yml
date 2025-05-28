@@ -241,6 +241,8 @@ nginx_sites_available:
       gzip on;
       gzip_disable "msie6";
 
+      limit_req zone=overseas burst=70 delay=3;
+
       # Metabase
       location / {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -284,3 +286,9 @@ nginx_configs:
         ~^https?://(.*\.)?localhost(:\d+)?$ $http_origin;
         default "";
       }
+
+  geoip:
+    - |
+      geoip2 /var/lib/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
+      map $geoip2_data_country_iso_code  $geo_outside_aus { default "outside"; AU ""; }
+      limit_req_zone $geo_outside_aus zone=overseas:10m rate=150r/m;

@@ -1,0 +1,13 @@
+---
+
+- name: Add maxmind repository
+  apt_repository:
+    repo: ppa:maxmind/ppa
+    codename: focal # Ubuntu 20 / Debian 11
+    # codename: noble # Ubuntu 24 / Debian 13
+
+- name: Install system dependencies of the fairfood application
+  apt:
+    pkg:
+    - libnginx-mod-http-geoip2
+    - geoipupdate
