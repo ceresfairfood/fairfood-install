@@ -131,11 +131,18 @@ sudo vim /etc/ssh/sshd_config
 
 ## Repeatable tasks
 
-Most tasks are not designed to be repeated.
+Most tasks were not designed to be repeated, but we are aiming to improve that.
 
 The [add-users](files/admin-ssh-keys/README.md) playbook can be used to add new users.
+Some tasks in the main `site` playbook have tags, which indicates they should be ok to repeat. But make sure any prior changes made on the server are saved in the playbook first.
+
 
 When running tasks as your own user, you need to include `--ask-become-pass` and provide your password.
+It's also advised to check and log diff output first, eg:
+
+```sh
+ansible-playbook site.yml -l staging --ask-become-pass --tags=nginx --diff --check
+```
 
 ## Installing Metabase
 
