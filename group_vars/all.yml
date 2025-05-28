@@ -54,7 +54,7 @@ puma_pid: "{{ pid_path }}/puma.pid"
 puma_state: "{{ pid_path }}/puma.state"
 puma_sock: "{{ sock_path }}/puma.{{ app }}.sock"
 puma_workers: 2
-puma_threads: 1 # start small and consider increasing to 3
+puma_threads: 3
 rack_timeout: 140 # keep in sync with rack_timeout.rb
 
 #----------------------------------------------------------------------
