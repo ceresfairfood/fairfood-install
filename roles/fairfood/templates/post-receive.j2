@@ -56,19 +56,22 @@ upgrade_application() {
   echo "Check homepage" # and abort if any http errors
   curl -IsS --fail  https://$DOMAIN/ | head -n1
 
-  echo "Update the static 500.html page for nginx..."
-  generate_500_page
+  echo "Update the 404 page static cache..." # for rails
+  generate_page "404"
+
+  echo "Update the 500 page static cache..." # for rails and nginx
+  generate_page "500"
 
   # Clean up any old gems
   bundle clean
 }
 
-generate_500_page() {
+generate_page() {
   # Delete it first so that nginx is not delivering the old version:
-  rm public/500.html
+  rm public/$1.html
   # Then save the new version. Don't pipe it directly, because that will create the file before the request and nginx will deliver an empty file.
-  wget --content-on-error "https://$DOMAIN/500" -O tmp/500.html 2>&1 | egrep -i 'saved|wget:' # reduce output to only include success or fail results.
-  mv tmp/500.html public/
+  wget --content-on-error "https://$DOMAIN/$1" -O tmp/$1.html 2>&1 | egrep -i 'saved|wget:' # reduce output to only include success or fail results.
+  mv tmp/$1.html public/
 }
 
 while read oldrev newrev refname; do
