@@ -53,6 +53,9 @@ upgrade_application() {
   echo "Restart puma..."
   bundle exec pumactl restart # Hot restart helps reduce downtime
 
+  echo "Check homepage" # and abort if any http errors
+  curl -IsS --fail  https://$DOMAIN/ | head -n1
+
   echo "Update the static 500.html page for nginx..."
   generate_500_page
 
