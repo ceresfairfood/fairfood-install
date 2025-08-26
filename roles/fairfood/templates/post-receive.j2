@@ -23,6 +23,9 @@ upgrade_application() {
 
   echo "RAILS_ENV=$RAILS_ENV"
 
+  echo "Stop job workers gracefully..."
+  systemctl --user --no-block stop "jobs-{{ app }}.service"
+
   source script/rbenv-init.sh
   ./script/rbenv-install.sh
   ./script/install-bundler
@@ -61,6 +64,15 @@ upgrade_application() {
 
   echo -n "Measured restart delay: "
   date -u -d "0 $FinalDate seconds - $StartDate seconds" +"%H:%M:%S"
+
+  if [ "$JOBS" = "true" ]; then
+    echo "Restarting job workers..."
+    systemctl --user restart "jobs-{{ app }}.service"
+
+    # Ansible fails to interact with user services.
+    # But it's super-fast and idempotent. So we do it here.
+    systemctl --user enable "jobs-{{ app }}.service"
+  fi
 
   echo "Update the 404 page static cache..." # for rails
   generate_page "404"
