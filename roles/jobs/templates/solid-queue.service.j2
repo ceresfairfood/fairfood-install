@@ -1,0 +1,30 @@
+# Ansible managed
+
+[Unit]
+Description=Solid Queue job workers and scheduling
+After=network.target
+
+[Service]
+Type=exec
+
+WorkingDirectory={{ current_path }}
+Environment=RAILS_ENV={{ rails_env }}
+
+# Adapted from:
+# - https://world.hey.com/robzolkos/how-i-deploy-solid-queue-with-capistrano-487b4a31
+ExecStart={{ app_user_home }}/.rbenv/shims/bundle exec rake solid_queue:start
+
+# Mentioned in the hey.com article but I couldn't find it in the code.
+# And I couldn't observe any effect of this signal.
+ExecReload=/bin/kill -TSTP $MAINPID
+
+# Graceful shutdown, waiting `SolidQueue.shutdown_timeout`
+# before killing workers -- defaults to 5 seconds.
+ExecStop=/bin/kill -TERM $MAINPID
+
+Restart=on-failure
+RestartSec=30s
+
+[Install]
+WantedBy=default.target
+

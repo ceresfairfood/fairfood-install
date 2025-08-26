@@ -22,6 +22,9 @@ upgrade_application() {
 
   echo "RAILS_ENV=$RAILS_ENV"
 
+  echo "Stop job workers gracefully..."
+  systemctl --user --no-block stop "jobs-{{ app }}.service"
+
   source script/rbenv-init.sh
   ./script/rbenv-install.sh
   ./script/install-bundler
@@ -52,6 +55,13 @@ upgrade_application() {
 
   echo "Restart puma..."
   bundle exec pumactl restart # Hot restart helps reduce downtime
+
+  echo "Restarting job workers..."
+  systemctl --user restart "jobs-{{ app }}.service"
+
+  # Ansible fails to interact with user services.
+  # But it's super-fast and idempotent. So we do it here.
+  systemctl --user enable jobs-fairfood.service
 
   echo "Check homepage" # and abort if any http errors
   curl -IsS --fail  https://$DOMAIN/ | head -n1
