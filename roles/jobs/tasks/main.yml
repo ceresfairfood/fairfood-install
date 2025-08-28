@@ -1,0 +1,24 @@
+---
+
+- name: Create user's systemd service config directory
+  file:
+    path: "{{ app_user_home }}/.config/systemd/user"
+    state: "directory"
+
+- name: Install Solid Queue job workers service
+  template:
+    src: "solid-queue.service.j2"
+    dest: "{{ app_user_home }}/.config/systemd/user/jobs-{{ app }}.service"
+ 
+# # This doesn't work because of a missing dbus session.
+# # But the post-receive hook can do it during deploy.
+# - name: Enable jobs at boot
+#   shell: bash -lc "systemctl --user enable jobs-{{ app }}.service"
+#   args:
+#     creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/jobs-{{ app }}.service"
+
+- name: Allow user to run services without login
+  shell: loginctl enable-linger {{ app_user }}
+  args:
+    creates: "/var/lib/systemd/linger/{{ app_user }}"
+  become: yes
