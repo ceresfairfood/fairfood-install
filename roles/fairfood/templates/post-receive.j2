@@ -53,8 +53,14 @@ upgrade_application() {
   echo "Restart puma..."
   ./script/restart-puma "$restart_mode"
 
+
   echo "Check homepage" # and abort if any http errors
-  curl -IsS --fail  https://$DOMAIN/ | head -n1
+  StartDate=$(date -u +"%s")
+  curl --head --silent --show-error --fail  "https://$DOMAIN/" | head -n1
+  FinalDate=$(date -u +"%s")
+
+  echo -n "Measured restart delay: "
+  date -u -d "0 $FinalDate seconds - $StartDate seconds" +"%H:%M:%S"
 
   echo "Update the 404 page static cache..." # for rails
   generate_page "404"
