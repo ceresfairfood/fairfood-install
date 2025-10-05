@@ -18,7 +18,7 @@ export DOMAIN="{{ domain }}"
 export JOBS="{{ background_jobs }}"
 
 upgrade_application() {
-  local action="${1:-upgrade}"
+  local restart_mode="${1:-cold}"
 
   echo "RAILS_ENV=$RAILS_ENV"
 
@@ -51,10 +51,16 @@ upgrade_application() {
   fi
 
   echo "Restart puma..."
-  bundle exec pumactl restart # Hot restart helps reduce downtime
+  ./script/restart-puma "$restart_mode"
+
 
   echo "Check homepage" # and abort if any http errors
-  curl -IsS --fail  https://$DOMAIN/ | head -n1
+  StartDate=$(date -u +"%s")
+  curl --head --silent --show-error --fail  "https://$DOMAIN/" | head -n1
+  FinalDate=$(date -u +"%s")
+
+  echo -n "Measured restart delay: "
+  date -u -d "0 $FinalDate seconds - $StartDate seconds" +"%H:%M:%S"
 
   echo "Update the 404 page static cache..." # for rails
   generate_page "404"
@@ -82,9 +88,16 @@ generate_page() {
 while read oldrev newrev refname; do
   echo "HEAD was at $oldrev"
   if [ "$refname" = "refs/heads/master" ]; then
+    if git diff --quiet "$newrev" -- ".ruby-version"; then
+      # nothing changed
+      restart_mode="hot"
+    else
+      restart_mode="cold"
+    fi
+
     # Checkout the new revision
     git reset --hard "$newrev"
-    upgrade_application
+    upgrade_application "$restart_mode"
   fi
 done
 
