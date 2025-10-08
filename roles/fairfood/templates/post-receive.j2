@@ -2,8 +2,9 @@
 #
 # bash is needed to `source` rbenv stuff
 
-# Fail on any error
+# Fail on any error, even if the command was piped
 set -e
+set -o pipefail
 
 # Go to the working tree
 cd "$GIT_DIR/.." || exit 1
