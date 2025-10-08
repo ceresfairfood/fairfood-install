@@ -88,12 +88,18 @@ generate_page() {
 while read oldrev newrev refname; do
   echo "HEAD was at $oldrev"
   if [ "$refname" = "refs/heads/master" ]; then
-    if git diff --quiet "$newrev" -- ".ruby-version"; then
-      # nothing changed
-      restart_mode="hot"
+    # Find out if major dependencies changed
+    set +e
+    git diff --quiet "$newrev" -- ".ruby-version"; ruby_changed=$?
+    git diff "$newrev" -- "Gemfile.lock" | grep -q "\+\s*puma"; puma_unchanged=$? #how to negate this?
+    set -e
+
+    if [[ $ruby_changed -ne 0 || $puma_unchanged -eq 0 ]]; then
+      restart_mode="cold" # Full stop/start
     else
-      restart_mode="cold"
+      restart_mode="hot" # Quicker restart of workers
     fi
+    echo "restart_mode:" $restart_mode
 
     # Checkout the new revision
     git reset --hard "$newrev"
