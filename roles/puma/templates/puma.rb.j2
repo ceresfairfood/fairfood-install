@@ -13,8 +13,10 @@ bind "unix://{{ puma_sock }}"
 
 stdout_redirect "{{ puma_log }}", "{{ puma_log }}", true
 
+# Detach from app bundle for phased restarts:
+# prune_bundler
+
 # Apply the latest performance-enhancing features
-prune_bundler
 wait_for_less_busy_worker
 fork_worker
 preload_app! false
