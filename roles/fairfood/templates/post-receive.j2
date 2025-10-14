@@ -52,11 +52,10 @@ upgrade_application() {
   fi
 
   echo "Restart puma..."
+  StartDate=$(date -u +"%s")
   ./script/restart-puma "$restart_mode"
 
-
   echo "Check homepage" # connect and retry transient errors (5xx) up to 10 seconds, abort script if errors persist
-  StartDate=$(date -u +"%s")
   curl --head --silent --show-error --fail --connect-timeout 10 --retry 10 --retry-delay 1 "https://$DOMAIN/" | head -n1
   FinalDate=$(date -u +"%s")
 
