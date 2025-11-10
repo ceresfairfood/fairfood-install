@@ -189,6 +189,24 @@ nginx_sites_available:
 
       limit_req zone=overseas burst=70 delay=3;
 
+      # proxy cache for highly requested resource
+      # requires adding this code outside the server block:
+      # proxy_cache_path /srv/fairfood/public_cache levels=1:2 keys_zone=public_cache:1m max_size=100m
+      #           inactive=60m use_temp_path=off;
+      location /products.json {
+        proxy_cache public_cache;
+        add_header X-Cache-Status $upstream_cache_status;
+        proxy_ignore_headers Set-Cookie;
+        proxy_cache_bypass $http_pragma; # allow cache to be bypassed with Pragma:no-cache
+
+        # repeat from @rails
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+        proxy_pass http://rails;
+      }
+
       location @rails {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
