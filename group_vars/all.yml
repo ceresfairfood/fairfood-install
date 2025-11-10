@@ -196,7 +196,8 @@ nginx_sites_available:
       location /products.json {
         proxy_cache public_cache;
         add_header X-Cache-Status $upstream_cache_status;
-        proxy_ignore_headers Set-Cookie;
+        proxy_ignore_headers Set-Cookie; # ignore cookie headers to enable caching
+        proxy_hide_header Set-Cookie; # strip cookie header to ensure it's not cached and shared
         proxy_cache_bypass $http_pragma; # allow cache to be bypassed with Pragma:no-cache
 
         # repeat from @rails
