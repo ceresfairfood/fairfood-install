@@ -19,3 +19,12 @@
     src: sudoers.j2
     dest: "/etc/sudoers.d/{{ app_user }}"
     mode: 0440
+
+- name: "Set user file descriptors limit" # fairfood-issues#2733
+  lineinfile:
+    path: /etc/security/limits.conf
+    regexp: '^\s*fairfood\s+soft\s+nofile'
+    # double the default of 1024
+    line: 'fairfood         soft    nofile          2048 # managed by ansible'
+  notify: restart puma
+  become: yes
