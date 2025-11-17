@@ -9,6 +9,7 @@
       become: yes
 
     - role: config
+      become: yes
 
     - role: fairfood-dependencies
       become: yes
