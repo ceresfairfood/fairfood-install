@@ -6,53 +6,62 @@
 
   roles:
     - role: admin-users
+      tags: admin-users
       become: yes
 
     - role: config
+      tags: config
+      become: yes
 
     - role: fairfood-dependencies
+      tags: fairfood-dependencies
       become: yes
 
     - role: app-user
       tags: app-user
 
     - role: rbenv
+      tags: rbenv
 
     - role: mail
+      tags: mail
       become: yes
 
     - role: sunfoxcz.dkim
+      tags: dkim
       become: yes
 
     - role: mysql
+      tags: mysql
       become: yes
 
     - role: puma
-      become: yes
       tags: puma
+      become: yes
 
     - role: certbot
+      tags: certbot
       become: yes
       when: https |bool
-      tags: certbot
 
     # After the installation you need to copy a license key to:
     #   /etc/GeoIP.conf
     # Then you can run `geoipupdate` to download the database.
     # Otherwise the nginx config is not valid.
     - role: geolimit
-      become: yes
       tags: geolimit
+      become: yes
 
     - role: jdauphant.nginx
+      tags: nginx
       vars:
         nginx_sites:
           fairfood: "{{ nginx_sites_available.fairfood_http }}"
       become: yes
       when: not https
-      tags: nginx
 
     - role: jdauphant.nginx
+      tags: nginx
       vars:
         nginx_sites:
           default: "{{ nginx_sites_available.default }}"
@@ -60,13 +69,12 @@
           fairfood_https: "{{ nginx_sites_available.fairfood_https }}"
       become: yes
       when: https |bool
-      tags: nginx
 
     - role: nginx
-      become: yes
       tags: nginx
+      become: yes
 
     - role: fairfood
+      tags: fairfood
       become: yes
       become_user: "{{ app_user }}"
-      tags: fairfood
