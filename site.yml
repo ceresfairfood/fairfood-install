@@ -35,10 +35,6 @@
       tags: mysql
       become: yes
 
-    - role: puma
-      tags: puma
-      become: yes
-
     - role: certbot
       tags: certbot
       become: yes
@@ -78,3 +74,7 @@
       tags: fairfood
       become: yes
       become_user: "{{ app_user }}"
+
+    - role: puma
+      tags: puma
+      become: yes
