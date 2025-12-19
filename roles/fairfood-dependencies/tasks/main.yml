@@ -24,6 +24,7 @@
   apt:
     pkg:
     - cron
+    - curl
     - git
     - imagemagick
     - memcached
