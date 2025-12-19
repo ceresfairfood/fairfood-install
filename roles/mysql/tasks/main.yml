@@ -22,25 +22,6 @@
     state: started
     enabled: yes
 
-- name: Create fairfood database
-  mysql_db:
-    name: "{{ db_name }}"
-    state: present
-  register: db_created
-
-- name: Copy data file to server - first time only
-  copy:
-    src: "{{ mysql_data_file }}"
-    dest: "/tmp/fairfood-init.sql"
-  when: db_created.changed
-
-- name: Import initial data - first time only
-  mysql_db:
-    name: "{{ db_name }}"
-    state: import
-    target: "/tmp/fairfood-init.sql"
-  when: db_created.changed
-
 #- name: remove all anonymous user accounts
 #  mysql_user: name='' host_all=yes state=absent
 #  become: yes
