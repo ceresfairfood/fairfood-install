@@ -40,10 +40,6 @@
       become: yes
       when: https |bool
 
-    # After the installation you need to copy a license key to:
-    #   /etc/GeoIP.conf
-    # Then you can run `geoipupdate` to download the database.
-    # Otherwise the nginx config is not valid.
     - role: geolimit
       tags: geolimit
       become: yes
