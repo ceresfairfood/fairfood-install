@@ -37,6 +37,7 @@
     - "{{ config_path }}"
     - "{{ pid_path }}"
     - "{{ sock_path }}"
+    - "{{ build_path }}/.bundle"
 
 - name: Install configuration files
   template:
