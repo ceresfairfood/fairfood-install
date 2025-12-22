@@ -1,5 +1,4 @@
 *.retry
 /.vagrant
 /credentials
-/files/admin-ssh-keys
 /files/GeoIP.conf
