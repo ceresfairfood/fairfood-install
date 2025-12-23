@@ -12,3 +12,4 @@ staging3.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.
 
 [production]
 prod3.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au wormly_hostid=44367 rails_env=production domain=members.ceresfairfood.org.au
+prod4.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au wormly_hostid=44367 rails_env=production domain=members.ceresfairfood.org.au background_jobs=false
