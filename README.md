@@ -38,6 +38,24 @@ lxc exec cff ssh-keygen
 lxc exec cff -- sh -c 'cat >> .ssh/authorized_keys' < ~/.ssh/id_rsa.pub
 ```
 
+```sh
+sudo apt install incus
+sudo adduser $USER incus-admin
+
+newgrp incus-admin
+incus admin init
+incus launch images:debian/13 cff
+
+incus exec cff -- apt-get update
+incus exec cff -- apt install gpg openssh-server python3 --yes
+incus file push --uid 0 --gid 0 ~/.ssh/id_rsa.pub cff/root/.ssh/authorized_keys
+
+incus config device add cff cff22 proxy listen=tcp:0.0.0.0:3322 connect=tcp:127.0.0.1:22
+
+# Enable browsing the app via https://localhost:2443
+incus config device add cff cff443 proxy listen=tcp:0.0.0.0:3443 connect=tcp:127.0.0.1:443
+```
+
 ## Test it locally
 
 First, update the initial schema file (files/fairfood_schema.sql). You can generate it from a dev environment or server 

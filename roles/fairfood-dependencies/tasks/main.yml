@@ -23,6 +23,8 @@
 - name: Install system dependencies of the fairfood application
   apt:
     pkg:
+    - cron
+    - curl
     - git
     - imagemagick
     - memcached

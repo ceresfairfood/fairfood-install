@@ -34,12 +34,6 @@ email_it: "ceresfairfood+it@openfoodnetwork.org.au"
 db_user: "fairfood"
 db_privileges: "ALL"
 db_name: "fairfood_{{ rails_env }}"
-# Created with something like:
-#
-#   RAILS_ENV=staging ./bin/rails db:create db:schema:load
-#   mysqldump fairfood_production > files/fairfood_schema.sql
-#
-mysql_data_file: "fairfood_schema.sql"
 
 # Metabase query database
 metabase_db_user: "metabase"
@@ -291,6 +285,6 @@ nginx_configs:
 
   geoip:
     - |
-      geoip2 /var/lib/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
+      geoip2 /usr/share/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
       map $geoip2_data_country_iso_code  $geo_outside_aus { default "outside"; AU ""; }
       limit_req_zone $geo_outside_aus zone=overseas:10m rate=150r/m;

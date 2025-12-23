@@ -1,6 +1,11 @@
 ---
 # Initialise the working directory
 
+- name: Allow web server to access the app directory
+  file:
+    dest: "{{ app_root }}"
+    mode: g+x
+
 - name: Authorise each admin SSH key to access the app user for push deploys
   authorized_key:
     user: "{{ app_user }}"
@@ -37,6 +42,7 @@
     - "{{ config_path }}"
     - "{{ pid_path }}"
     - "{{ sock_path }}"
+    - "{{ build_path }}/.bundle"
 
 - name: Install configuration files
   template:

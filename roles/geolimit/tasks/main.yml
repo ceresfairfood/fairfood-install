@@ -1,13 +1,24 @@
 ---
 
-- name: Add maxmind repository
-  apt_repository:
-    repo: ppa:maxmind/ppa
-    codename: focal # Ubuntu 20 / Debian 11
-    # codename: noble # Ubuntu 24 / Debian 13
+# You need to obtain this file from a server first:
+#
+#   scp staging2.ceresfairfood.org.au:/etc/GeoIP.conf files/
+#
+- name: Install GeoIP config with secret license key
+  copy:
+    src: GeoIP.conf
+    dest: /etc/
+
+- name: Install geoipupdate
+  apt:
+    deb: https://github.com/maxmind/geoipupdate/releases/download/v7.1.1/geoipupdate_7.1.1_linux_amd64.deb
 
 - name: Install system dependencies of the fairfood application
   apt:
     pkg:
     - libnginx-mod-http-geoip2
-    - geoipupdate
+
+- name: Download GeoIP database
+  command: geoipupdate
+  args:
+    creates: "/usr/share/GeoIP/GeoLite2-Country.mmdb"
