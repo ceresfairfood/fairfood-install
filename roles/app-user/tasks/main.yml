@@ -6,7 +6,6 @@
     name: "{{ app_user }}"
     state: present
     home: "{{ app_user_home }}"
-    append: yes # add groups to user, don't remove existing group memberships
     shell: /bin/bash
     # Set password hash to `*` instead of `!` to enable SSH logins via public key.
     password: "*"
