@@ -8,7 +8,6 @@ lxc ansible_host=127.0.0.1 ansible_port=1122 ansible_user=root ansible_ssh_commo
 vagrant ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 
 [staging]
-staging.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au domain=staging.ceresfairfood.org.au
 staging3.ceresfairfood.org.au https=true developer_email=maikel@openfoodnetwork.org.au domain=staging.ceresfairfood.org.au
 
 [production]
