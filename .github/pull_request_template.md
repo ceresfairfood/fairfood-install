@@ -1,1 +1,1 @@
-ceresfairfood/fairfood-issues#
+- ceresfairfood/fairfood-issues#
