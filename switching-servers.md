@@ -40,6 +40,11 @@ Most steps are reversible, but not all (switching databases).
   ```
   git push fairfood@prod4.ceresfairfood.org.au:~/current
   ```
+- [ ] Copy uploaded files to new server:
+  ```
+  # ssh -A fairfood@prod4.ceresfairfood.org.au
+  scp -r fairfood@prod3.ceresfairfood.org.au:current/public/images/label_icons databases.sql.gz current/public/images
+  ```
 - [ ] PRODUCTION: Set up SSH tunnel for database access:
   ```
   # /etc/systemd/system/autossh-mysql-tunnel.service
