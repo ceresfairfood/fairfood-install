@@ -117,6 +117,10 @@ Most steps are reversible, but not all (switching databases).
   MassMailer.email_single_user(to: "fairfood@dkimvalidator.com", from: EMAIL_INFO, subject: "Test", body: "Hello").deliver_now
   ```
 - [ ] Test web application by changing your local `/etc/hosts` file.
+- [ ] Deactivate Wordpress plugins that can hinder migration:
+  * Cache
+  * Backup
+- [ ] Copy Wordpress files (see wordpress.md).
 - [ ] Deactivate deployments in `/srv/fairfood/current/.git/hooks/post-receive`:
   ```
   # Tell other devs to not deploy to the old server:
