@@ -8,6 +8,7 @@ Most steps are reversible, but not all (switching databases).
 - [ ] Change DNS TTL to 5 minutes in Rackspace DNS.
 - [ ] Create new server and add new DNS record.
 - [ ] Also add new server IP to SPF record.
+- [ ] Add reverse DNS (PTR) entry for root domain in [Rimu console](https://rimuhosting.com/cp/rdns.jsp?rid=1) (recommended to improve email deliverability)
 
 ## Prepare
 
