@@ -222,4 +222,5 @@ Old server:
 - [ ] Increase DNS TTL again.
 
 - [ ] Review email delivery stats again after a while: `pflogsumm -d today -u 0 --problems-first /var/log/mail.log`
+  - if any issues, consider slowing postfix down (see [example config here](https://github.com/ceresfairfood/fairfood-issues/issues/2146#issuecomment-3771037362))
 - [ ] Remove old server from SPF record.
