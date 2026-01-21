@@ -216,7 +216,7 @@ Old server:
   - [ ] php-fpm
   - [ ] mariadb
   - [ ] nginx
-- [ ] Shut down old server.
+- [ ] Shut down old server (use the Rimu [Stop a VPS](https://rimuhosting.com/cp/vps/vpsstop.jsp) option so they don't get alerts about it)
 - [ ] Delete old server.
 - [ ] Remove old DNS records.
 - [ ] Increase DNS TTL again.
