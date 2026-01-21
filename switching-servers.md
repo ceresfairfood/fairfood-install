@@ -117,6 +117,11 @@ Most steps are reversible, but not all (switching databases).
   ```rb
   MassMailer.email_single_user(to: "fairfood@dkimvalidator.com", from: EMAIL_INFO, subject: "Test", body: "Hello").deliver_now
   ```
+- [ ] Test email delivery to Yahoo user (it was a problem after last two migrations). (Log into yahoo to re-activate inbox first)
+  ```rb
+  MassMailer.email_single_user(to: "cookdavid229@yahoo.com", from: EMAIL_INFO, subject: "Test", body: "Hello").deliver_now
+  ```
+- [ ] Consider relaying some emails from old prod via new prod before go-live, so yahoo can warm up to the new server. (exclude order reminder emails, they are too spammy). See example postfix config [here](https://github.com/ceresfairfood/fairfood-issues/issues/2156).
 - [ ] Test web application by changing your local `/etc/hosts` file.
 - [ ] Deactivate Wordpress plugins that can hinder migration:
   * Cache
@@ -198,9 +203,10 @@ echo ""
 exit 1
 ```
 - [ ] Change DNS entry.
-- [ ] Remove old server from SPF record.
+- [ ] Review email delivery stats: `pflogsumm -d today -u 0 --problems-first /var/log/mail.log`
 
 ## Finally
+Old server:
 - [ ] Disable root login.
   ```
   vi /etc/ssh/sshd_config
@@ -214,3 +220,6 @@ exit 1
 - [ ] Delete old server.
 - [ ] Remove old DNS records.
 - [ ] Increase DNS TTL again.
+
+- [ ] Review email delivery stats again after a while: `pflogsumm -d today -u 0 --problems-first /var/log/mail.log`
+- [ ] Remove old server from SPF record.
