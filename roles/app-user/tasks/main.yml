@@ -18,3 +18,9 @@
     src: sudoers.j2
     dest: "/etc/sudoers.d/{{ app_user }}"
     mode: 0440
+
+# This only works with a root login. Switching via sudo doesn't allow access.
+- name: Allow user to run services without login
+  shell: loginctl enable-linger {{ app_user }}
+  args:
+    creates: "/var/lib/systemd/linger/{{ app_user }}"
