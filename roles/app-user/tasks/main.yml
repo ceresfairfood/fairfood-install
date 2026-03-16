@@ -10,7 +10,6 @@
     # Set password hash to `*` instead of `!` to enable SSH logins via public key.
     password: "*"
     update_password: on_create
-  become: yes
 
 - name: Create sudoers configuration for app user
   become: true
