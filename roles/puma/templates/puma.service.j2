@@ -11,6 +11,12 @@ User={{ app_user }}
 WorkingDirectory={{ current_path }}
 PIDFile={{ puma_pid }}
 Environment=BUNDLE_GEMFILE={{ current_path }}/Gemfile
+Environment=PIDFILE="{{ puma_pid }}"
+Environment=STATE_PATH="{{ puma_state }}"
+Environment=WEB_CONCURRENCY="auto"
+Environment=RAILS_ENV="{{ rails_env }}"
+Environment=BIND_URL="unix://{{ puma_sock }}"
+Environment=LOGFILE="{{ puma_log }}"
 
 # Helpful for debugging socket activation, etc.
 # Environment=PUMA_DEBUG=1
