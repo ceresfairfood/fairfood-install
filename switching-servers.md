@@ -183,10 +183,12 @@ Most steps are reversible, but not all (switching databases).
 
 **Finishing it off:**
 - [ ] Disable mysql readonly mode on old server if required (eg Wordpress).
+- [ ] `ansible-playbook collectd-wormly.yml -l production --ask-become-pass`
 - [ ] Set up Wormly metrics.
 ```
 apt install collectd
 scp prod3.ceresfairfood.org.au:/etc/collectd/collectd.conf.d/wormly.conf /etc/collectd/collectd.conf.d/
+scp prod3.ceresfairfood.org.au:/etc/collectd/collectd.conf.d/monitor-nginx.conf /etc/collectd/collectd.conf.d/
 ssh prod3.ceresfairfood.org.au "systemctl stop collectd.service"
 systemctl restart collectd.service
 ```
