@@ -6,7 +6,7 @@ set -e # Exit if any command fails
 tmpfile=/tmp/pflogsumm-notice.txt
 to_address=postmaster,info@ceresfairfood.org.au
 
-pflogsumm -d yesterday -u 0 --problems-first --verbose-msg-detail /var/log/mail.log > $tmpfile
+/usr/sbin/pflogsumm -d yesterday -u 0 --problems-first --verbose-msg-detail /var/log/mail.log > $tmpfile
 
 if egrep -m1 -q "(by relay\)|(reject|hold|discard) detail|failures|Warnings|Errors|Panics)$" $tmpfile; then
   mailx -s "Email error stats: `uname -n`" $to_address < $tmpfile
