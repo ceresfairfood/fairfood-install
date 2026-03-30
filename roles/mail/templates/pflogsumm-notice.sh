@@ -4,7 +4,7 @@ set -e # Exit if any command fails
 # and email the report to admins.
 
 tmpfile=/tmp/pflogsumm-notice.txt
-to_address=postmaster
+to_address=postmaster,info@ceresfairfood.org.au
 
 pflogsumm -d yesterday -u 0 --problems-first --verbose-msg-detail /var/log/mail.log > $tmpfile
 
