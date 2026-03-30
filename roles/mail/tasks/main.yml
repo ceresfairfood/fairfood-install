@@ -7,6 +7,7 @@
     pkg:
     - mailutils
     - postfix
+    - pflogsumm
     state: present
 
 - name: configure receiving locally only
@@ -24,3 +25,17 @@
     regexp: "root"
     line: "{{ email_it }}, /root/mailbox"
     state: present
+
+# Check for email delivery errors and email details to admins
+- name: Install pflogsumm-notice script
+  template:
+    src: "pflogsumm-notice.sh"
+    dest: "/root/pflogsumm-notice.sh"
+    mode: 0751
+
+- name: Cron job to check postfix log summary at 1am each day
+  cron:
+    name: "pflogsumm-notice"
+    minute: "1"
+    hour: "1"
+    job: "/root/pflogsumm-notice.sh"
