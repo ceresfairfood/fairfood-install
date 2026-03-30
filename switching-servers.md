@@ -191,6 +191,8 @@ scp prod3.ceresfairfood.org.au:/etc/collectd/collectd.conf.d/wormly.conf /etc/co
 scp prod3.ceresfairfood.org.au:/etc/collectd/collectd.conf.d/monitor-nginx.conf /etc/collectd/collectd.conf.d/
 ssh prod3.ceresfairfood.org.au "systemctl stop collectd.service"
 systemctl restart collectd.service
+# Schedule daily restart (run as root)
+(crontab -l ; echo "01 01 * * * systemctl restart collectd")| crontab -
 ```
 - [ ] Check metrics at https://www.wormly.com/jsgraphs/jsgraphpageid/424045.
 - [ ] Update post-receive hook on old server:
