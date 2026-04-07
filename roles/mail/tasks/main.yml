@@ -22,7 +22,6 @@
   lineinfile:
     create: yes
     dest: ~/.forward
-    regexp: "root"
     line: "{{ email_it }}"
     state: present
 
