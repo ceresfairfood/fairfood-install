@@ -23,7 +23,7 @@
     create: yes
     dest: ~/.forward
     regexp: "root"
-    line: "{{ email_it }}, /root/mailbox"
+    line: "{{ email_it }}"
     state: present
 
 # Check for email delivery errors and email details to admins
