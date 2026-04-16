@@ -1,10 +1,5 @@
 ---
 
-- name: Create user's systemd service config directory
-  file:
-    path: "{{ app_user_home }}/.config/systemd/user"
-    state: "directory"
-
 - name: Install Solid Queue job workers service
   template:
     src: "solid-queue.service.j2"
