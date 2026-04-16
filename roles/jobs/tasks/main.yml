@@ -5,9 +5,7 @@
     src: "solid-queue.service.j2"
     dest: "{{ app_user_home }}/.config/systemd/user/jobs-{{ app }}.service"
 
-# # This doesn't work because of a missing dbus session.
-# # But the post-receive hook can do it during deploy.
-# - name: Enable jobs at boot
-#   shell: bash -lc "systemctl --user enable jobs-{{ app }}.service"
-#   args:
-#     creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/jobs-{{ app }}.service"
+- name: Enable jobs at boot
+  shell: systemctl --user --machine={{ app_user }}@.host enable jobs-{{ app }}.service
+  args:
+    creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/jobs-{{ app }}.service"
