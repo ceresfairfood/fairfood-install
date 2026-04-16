@@ -1,23 +1,13 @@
 ---
 # Install puma app service
 
-- name: copy puma files
+- name: Install puma service
   template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "0744"
-    owner: "{{ app_user }}"
-    group: "{{ app_user }}"
-  become: yes
-  with_items:
-    # Any updates to the puma init script need to be reloaded: systemctl daemon-reload
-    - { src: "puma.service.j2", dest: "/etc/systemd/system/puma-{{ app }}.service" }
-  notify:
-    - restart nginx
-    - restart puma
+    src: "puma.service.j2"
+    dest: "{{ app_user_home }}/.config/systemd/user/puma.service"
 
-- name: enable puma at boot
-  service:
-    name=puma-{{ app }}
-    enabled=yes
-  become: yes
+- name: Enable puma at boot
+  shell: systemctl --user --machine={{ app_user }}@.host enable puma.service
+  args:
+    creates: "{{ app_user_home }}/.config/systemd/user/multi-user.target.wants/puma.service"
+  become: true
