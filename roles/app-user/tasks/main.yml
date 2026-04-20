@@ -18,6 +18,11 @@
     dest: "/etc/sudoers.d/{{ app_user }}"
     mode: 0440
 
+- name: Create user's systemd service config directory
+  file:
+    path: "{{ app_user_home }}/.config/systemd/user"
+    state: "directory"
+
 # This only works with a root login. Switching via sudo doesn't allow access.
 - name: Allow user to run services without login
   shell: loginctl enable-linger {{ app_user }}
