@@ -9,5 +9,5 @@
 - name: Enable puma at boot
   shell: systemctl --user --machine={{ app_user }}@.host enable puma.service
   args:
-    creates: "{{ app_user_home }}/.config/systemd/user/multi-user.target.wants/puma.service"
+    creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/puma.service"
   become: true
