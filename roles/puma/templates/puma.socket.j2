@@ -1,0 +1,25 @@
+# Ansible managed
+
+# This systemd socket listener allows zero-downtime puma service restarts.
+#
+# We can now perform a cold restart, for example when upgrading Ruby, while
+# systemd keeps listening to the socket and clients just wait until puma is
+# up again.
+#
+# - https://github.com/puma/puma/blob/main/docs/systemd.md
+
+[Unit]
+Description=Puma HTTP Server Accept Sockets
+
+[Socket]
+ListenStream={{ puma_sock }}
+
+# Socket options matching Puma defaults
+ReusePort=true
+Backlog=1024
+# Enable this if you're using Puma with the "low_latency" option, read more in Puma DSL docs and systemd docs:
+# https://www.freedesktop.org/software/systemd/man/latest/systemd.socket.html#NoDelay=
+# NoDelay=true
+
+[Install]
+WantedBy=sockets.target

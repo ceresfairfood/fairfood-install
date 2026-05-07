@@ -5,3 +5,8 @@
   template:
     src: "puma.service.j2"
     dest: "{{ app_user_home }}/.config/systemd/user/puma.service"
+
+- name: Install puma socket
+  template:
+    src: "puma.socket.j2"
+    dest: "{{ app_user_home }}/.config/systemd/user/puma.socket"
