@@ -5,7 +5,8 @@ Description=Puma HTTP Server
 After=network.target
 
 [Service]
-Type=simple
+Type=notify
+WatchdogSec=10
 
 WorkingDirectory={{ current_path }}
 PIDFile={{ puma_pid }}
@@ -23,10 +24,7 @@ Environment=LOGFILE="{{ puma_log }}"
 ExecStart=/bin/bash -lc "bundle exec puma -C {{ puma_config }}"
 ExecReload=/bin/bash -lc "bundle exec pumactl phased-restart -S {{ puma_state }}"
 
-SyslogIdentifier=puma
-Restart=on-failure
-RestartSec=30s
-TimeoutSec=30s
+Restart=always
 
 [Install]
 WantedBy=default.target
