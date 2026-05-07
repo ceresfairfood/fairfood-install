@@ -21,7 +21,7 @@ Environment=LOGFILE="{{ puma_log }}"
 # Helpful for debugging socket activation, etc.
 # Environment=PUMA_DEBUG=1
 
-ExecStart=/bin/bash -lc "bundle exec puma -C {{ puma_config }}"
+ExecStart={{ app_user_home }}/.rbenv/shims/bundle exec puma -C {{ puma_config }}
 
 Restart=always
 
