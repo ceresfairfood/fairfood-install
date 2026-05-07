@@ -22,7 +22,6 @@ Environment=LOGFILE="{{ puma_log }}"
 # Environment=PUMA_DEBUG=1
 
 ExecStart=/bin/bash -lc "bundle exec puma -C {{ puma_config }}"
-ExecReload=/bin/bash -lc "bundle exec pumactl phased-restart -S {{ puma_state }}"
 
 Restart=always
 
