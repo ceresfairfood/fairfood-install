@@ -6,8 +6,7 @@
     src: "puma.service.j2"
     dest: "{{ app_user_home }}/.config/systemd/user/puma.service"
 
-- name: Enable puma at boot
-  shell: systemctl --user --machine={{ app_user }}@.host enable puma.service
-  args:
-    creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/puma.service"
-  become: true
+- name: Install puma socket
+  template:
+    src: "puma.socket.j2"
+    dest: "{{ app_user_home }}/.config/systemd/user/puma.socket"

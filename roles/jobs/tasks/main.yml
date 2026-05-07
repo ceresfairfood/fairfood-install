@@ -4,8 +4,3 @@
   template:
     src: "solid-queue.service.j2"
     dest: "{{ app_user_home }}/.config/systemd/user/jobs-{{ app }}.service"
-
-- name: Enable jobs at boot
-  shell: systemctl --user --machine={{ app_user }}@.host enable jobs-{{ app }}.service
-  args:
-    creates: "{{ app_user_home }}/.config/systemd/user/default.target.wants/jobs-{{ app }}.service"
