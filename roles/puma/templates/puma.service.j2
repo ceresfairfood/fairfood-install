@@ -23,6 +23,13 @@ Environment=LOGFILE="{{ puma_log }}"
 
 ExecStart={{ app_user_home }}/.rbenv/shims/bundle exec puma -C {{ puma_config }}
 
+# Hot restart
+# - keeps connections
+# - allows safe puma upgrade
+# - does not allow upgrading Ruby though, use restart instead
+# - https://github.com/puma/puma/blob/main/docs/restart.md
+ExecReload=/bin/kill -SIGUSR2 $MAINPID
+
 Restart=always
 
 [Install]
