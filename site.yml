@@ -74,6 +74,7 @@
     - role: puma
       tags: puma
       become: yes
+      become_user: "{{ app_user }}"
 
     - role: jobs
       become: yes
