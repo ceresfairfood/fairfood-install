@@ -56,7 +56,7 @@ upgrade_application() {
   echo "Restart puma..."
   StartDate=$(date -u +"%s")
   ./script/restart-puma "$restart_mode"
-  systemctl --user enable "puma.service"
+  systemctl --user enable puma.socket puma.service
 
   echo "Check homepage" # connect and retry transient errors (5xx) up to 10 seconds, abort script if errors persist
   curl --head --silent --show-error --fail --connect-timeout 10 --retry 10 --retry-delay 1 "https://$DOMAIN/" | head -n1
