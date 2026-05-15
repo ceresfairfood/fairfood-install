@@ -3,6 +3,7 @@
 [Unit]
 Description=Puma HTTP Server
 After=network.target
+Requires=puma.socket
 
 [Service]
 Type=notify
