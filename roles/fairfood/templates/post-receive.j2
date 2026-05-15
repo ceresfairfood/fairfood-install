@@ -111,6 +111,10 @@ while read oldrev newrev refname; do
     git reset --hard "$newrev"
     upgrade_application "$restart_mode"
   fi
+  if [ "$refname" = "refs/heads/main" ]; then
+    git reset --hard "$newrev"
+    upgrade_application
+  fi
 done
 
 exit 0
