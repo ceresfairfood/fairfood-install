@@ -28,7 +28,6 @@ upgrade_application() {
 
   source script/rbenv-init.sh
   ./script/rbenv-install.sh
-  ./script/install-bundler
 
   # Install the required gems
   bundle install
@@ -111,6 +110,10 @@ while read oldrev newrev refname; do
     # Checkout the new revision
     git reset --hard "$newrev"
     upgrade_application "$restart_mode"
+  fi
+  if [ "$refname" = "refs/heads/main" ]; then
+    git reset --hard "$newrev"
+    upgrade_application
   fi
 done
 
