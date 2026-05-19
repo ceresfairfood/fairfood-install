@@ -183,3 +183,26 @@ Copy existing config database from another installation (eg from `/home/metabase
 
 ## Switching servers
 A checklist for migrating to a new production server is here: [switching-servers.md](switching-servers.md)
+
+## General info
+### Services
+The following services/processes are used:
+* puma
+* solid_queue (jobs-fairfood.service)
+* nginx
+* delayed_job (not managed with systemd, will not auto start)
+
+memmon will kill any processes that use too much memory.
+
+Puma and Solid Queue are user services, and are controlled differently to global services:
+
+```
+# log in directly to the server as the application user:
+ssh fairfood@ceresfairfood.org.au
+
+sysetmctl --user status [puma,jobs-fairfood]
+# or a slightly shorter alias:
+systemctlu status
+
+# If you are logged in as root, then it's more complicated:
+systemctl --user --machine fairfood@.host status puma,jobs-fairfood
