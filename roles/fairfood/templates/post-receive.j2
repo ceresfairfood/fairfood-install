@@ -23,11 +23,11 @@ upgrade_application() {
 
   echo "RAILS_ENV=$RAILS_ENV"
 
-  echo "Stop job workers gracefully..."
-  systemctl --user --no-block stop "jobs-{{ app }}.service"
-
   source script/rbenv-init.sh
   ./script/rbenv-install.sh
+
+  echo "Stop job workers gracefully..."
+  systemctl --user --no-block stop "jobs-{{ app }}.service"
 
   # Install the required gems
   bundle install
