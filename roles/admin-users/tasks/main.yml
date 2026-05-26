@@ -7,7 +7,9 @@
     name: "{{ item | basename | splitext | first }}"
     state: present
     append: yes
-    groups: sudo
+    groups:
+      - adm
+      - sudo
     shell: /bin/bash
     # Password login is disabled by default.
     # Set a user's password after SSH has been configured for key authentication
