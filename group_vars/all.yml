@@ -182,7 +182,7 @@ nginx_sites_available:
         return 301 https://$server_name/favicon.png;
       }
 
-      limit_req zone=overseas burst=70 delay=3;
+      limit_req zone=overseas burst=50 delay=3;
 
       location @rails {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -288,4 +288,4 @@ nginx_configs:
     - |
       geoip2 /usr/share/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
       map $geoip2_data_country_iso_code  $geo_outside_aus { default "outside"; AU ""; }
-      limit_req_zone $geo_outside_aus zone=overseas:10m rate=150r/m;
+      limit_req_zone $geo_outside_aus zone=overseas:10m rate=100r/m;
