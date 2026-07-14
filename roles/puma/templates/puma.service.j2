@@ -2,7 +2,7 @@
 
 [Unit]
 Description=Puma HTTP Server
-After=network.target
+After=network.target mariadb.service
 Requires=puma.socket
 
 [Service]
