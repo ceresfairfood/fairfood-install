@@ -182,6 +182,8 @@ nginx_sites_available:
         return 301 https://$server_name/favicon.png;
       }
 
+      # Bursts of up to 3 requests allowed. Further reqs are queued and delayed as per rate limit.
+      # If the burst exceeds 50 requests, they will be rejected immediately with code 503.
       limit_req zone=overseas burst=50 delay=3;
 
       location @rails {
@@ -284,6 +286,8 @@ nginx_configs:
         default "";
       }
 
+  # Rate limiting for overseas traffic. A max rate of 100requests/min is permitted.
+  # See the server block above for burst and delay rules.
   geoip:
     - |
       geoip2 /usr/share/GeoIP/GeoLite2-Country.mmdb { $geoip2_data_country_iso_code country iso_code; }
