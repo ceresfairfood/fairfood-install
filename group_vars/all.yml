@@ -182,8 +182,9 @@ nginx_sites_available:
         return 301 https://$server_name/favicon.png;
       }
 
-      # Bursts of up to 3 requests allowed. Further reqs are queued and delayed as per rate limit.
-      # If the burst exceeds 50 requests, they will be rejected immediately with code 503.
+      # First 3 excess requests pass through immediately (no delay).
+      # The next requests, up to the burst=50 total, are queued/delayed to enforce the 100r/m rate.
+      # Further excess requests are rejected immediately with 503.
       limit_req zone=overseas burst=50 delay=3;
 
       location @rails {
@@ -286,7 +287,7 @@ nginx_configs:
         default "";
       }
 
-  # Rate limiting for overseas traffic. A max rate of 100requests/min is permitted.
+  # General rate limiting shared for all overseas traffic.
   # See the server block above for burst and delay rules.
   geoip:
     - |
