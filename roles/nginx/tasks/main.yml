@@ -1,11 +1,5 @@
 ---
 
-- name: Allow nginx to access app directory
-  user:
-    name: www-data
-    groups: "{{ app_user }}"
-    append: yes
-
 # Check config and report to wormly if invalid.
 # This ensures we are always ready to start nginx in the event of a system restart.
 - name: Install nginx config check script
