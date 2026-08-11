@@ -36,6 +36,8 @@
     - libmariadb-dev
     # For mimemagic / paperclip
     - shared-mime-info
+    # Automated security updates
+    - unattended-upgrades
     state: "present"
   become: yes
 
