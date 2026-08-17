@@ -13,9 +13,3 @@
     --agree-tos -d "{{ domain }}" --renew-hook "systemctl reload nginx"
   args:
     creates: "/etc/letsencrypt/live/{{ domain }}"
-
-- name: Create certbot webroot dir
-  file:
-    path: "/etc/letsencrypt/webrootauth"
-    state: directory
-    recurse: true

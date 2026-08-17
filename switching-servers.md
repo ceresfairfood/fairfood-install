@@ -12,17 +12,7 @@ Most steps are reversible, but not all (switching databases).
 
 ## Prepare
 
-- [ ] Forward TLS certificate challenges from the old to the new server. On the old server, edit `/etc/nginx/letsencrypt-webrootauth.inc`:
-  ```
-  # For certbot automatic renewal
-  location '/.well-known/acme-challenge' {
-    default_type "text/plain";
-    # root /etc/letsencrypt/webrootauth;
-    proxy_pass http://43.239.97.114;
-    proxy_set_header Host $host;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  }
-  ```
+- [ ] Forward TLS certificate challenges from the old to the new server. Uncomment in `fairfood_http.conf`.
 - [ ] Add new server to Ansible hosts with jobs disabled.
 - [ ] Provision server with Ansible scripts: `ansible-playbook -l prod4.ceresfairfood.org.au -u root site.yml`
 - [ ] Set up firewall for general security.
