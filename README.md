@@ -155,11 +155,11 @@ The [add-users](files/admin-ssh-keys/README.md) playbook can be used to add new 
 Some tasks in the main `site` playbook have tags, which indicates they should be ok to repeat. But make sure any prior changes made on the server are saved in the playbook first.
 
 
-When running tasks as your own user, you need to include `--ask-become-pass` and provide your password.
-It's also advised to check and log diff output first, eg:
+When running tasks as your own user, you need to include `--ask-become-pass` (shortcut `-K`) and provide your password.
+It's also advised to `--check` (`-C`, ie "dry run") and log `--diff` (`-D`) output first, eg:
 
 ```sh
-ansible-playbook site.yml -l staging --ask-become-pass --tags=nginx --diff --check
+ansible-playbook site.yml -l staging -K -t nginx -DC
 ```
 
 ## Installing Metabase

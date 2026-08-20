@@ -17,7 +17,7 @@ build_path: "{{ current_path }}"
 
 log_path: "{{ current_path }}/log"
 pid_path: "{{ current_path }}/tmp/pids"
-sock_path: "{{ current_path }}/tmp/socks"
+sock_path: "/tmp/socks"
 
 # During [prod switchover](README.md#switching-servers),
 # domain will be manually updated in nginx config, and new certs generated.
