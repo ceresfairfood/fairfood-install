@@ -52,6 +52,7 @@
     group: www-data
     mode: g=x
   with_items:
+    - "{{ app_root }}"
     - "{{ current_path }}"
     - "{{ current_path }}/tmp"
     - "{{ current_path }}/tmp/socks"
@@ -62,7 +63,7 @@
   file:
     dest: "{{ current_path }}/public"
     group: www-data
-    mode: g=rxs # setgid to ensure new files are owned by this group
+    mode: g+xs # setgid to ensure new files are owned by this group
     recurse: true
 
 - name: Install configuration files
