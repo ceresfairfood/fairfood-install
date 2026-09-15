@@ -38,6 +38,7 @@
     - "{{ config_path }}"
     - "{{ pid_path }}"
     - "{{ sock_path }}"
+    - "{{ current_path }}/public"
     - "{{ build_path }}/.bundle"
 
 - name: Prevent access to directory by others
@@ -45,7 +46,7 @@
     dest: "{{ current_path }}"
     mode: o=
 
-# Permission is permitted to traverse directories in order to reach public and .sock files.
+# Execute permission is required to traverse directories, in order to reach public and .sock files.
 - name: Allow web server to traverse only necessary directories
   file:
     dest: "{{ item }}"
@@ -54,16 +55,17 @@
   with_items:
     - "{{ app_root }}"
     - "{{ current_path }}"
+    - "{{ current_path }}/public"
     - "{{ current_path }}/tmp"
     - "{{ current_path }}/tmp/socks"
 
-- name: Allow web server to read public files
+- name: Allow web server to read newly created public files
   become: yes
   become_user: root
   file:
     dest: "{{ current_path }}/public"
     group: www-data
-    mode: g+xs # setgid to ensure new files are owned by this group
+    mode: g+s # setgid to ensure new files are owned by this group
     recurse: true
 
 - name: Install configuration files
