@@ -1,10 +1,6 @@
 ---
 # Initialise the working directory
 
-- name: Allow web server to access the app directory
-  file:
-    dest: "{{ app_root }}"
-    mode: g+x
 
 - name: Authorise each admin SSH key to access the app user for push deploys
   authorized_key:
@@ -42,7 +38,37 @@
     - "{{ config_path }}"
     - "{{ pid_path }}"
     - "{{ sock_path }}"
+    - "{{ current_path }}/public"
     - "{{ build_path }}/.bundle"
+
+- name: Prevent access to directory by others
+  file:
+    dest: "{{ app_root }}"
+    mode: o=
+
+# Execute permission is required to traverse directories, in order to reach public and .sock files.
+- name: Allow web server to traverse only necessary directories
+  become: yes
+  become_user: root
+  file:
+    dest: "{{ item }}"
+    group: www-data
+    mode: g=x
+  with_items:
+    - "{{ app_root }}"
+    - "{{ current_path }}"
+    - "{{ current_path }}/public"
+    - "{{ current_path }}/tmp"
+    - "{{ current_path }}/tmp/socks"
+
+- name: Allow web server to read newly created public files
+  become: yes
+  become_user: root
+  file:
+    dest: "{{ current_path }}/public"
+    group: www-data
+    mode: g+s # setgid to ensure new files are owned by this group
+    recurse: true
 
 - name: Install configuration files
   template:
