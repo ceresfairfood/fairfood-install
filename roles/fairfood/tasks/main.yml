@@ -48,6 +48,8 @@
 
 # Execute permission is required to traverse directories, in order to reach public and .sock files.
 - name: Allow web server to traverse only necessary directories
+  become: yes
+  become_user: root
   file:
     dest: "{{ item }}"
     group: www-data
