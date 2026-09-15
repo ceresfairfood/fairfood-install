@@ -43,7 +43,7 @@
 
 - name: Prevent access to directory by others
   file:
-    dest: "{{ current_path }}"
+    dest: "{{ app_root }}"
     mode: o=
 
 # Execute permission is required to traverse directories, in order to reach public and .sock files.
