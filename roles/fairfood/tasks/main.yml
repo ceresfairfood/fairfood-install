@@ -80,7 +80,7 @@
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: 0775
+    mode: 0770 # enforce no permission for others
   with_items:
     - { src: "post-receive.j2", dest: "{{ build_path }}/.git/hooks/post-receive" }
     - { src: "database.yml.j2", dest: "{{ config_path }}/database.yml" }
