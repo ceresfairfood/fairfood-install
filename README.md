@@ -190,7 +190,6 @@ The following services/processes are used:
 * puma
 * solid_queue (jobs-fairfood.service)
 * nginx
-* delayed_job (not managed with systemd, will not auto start)
 
 memmon will kill any processes that use too much memory.
 
