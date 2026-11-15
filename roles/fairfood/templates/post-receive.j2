@@ -48,11 +48,6 @@ upgrade_application() {
     fi
   fi
 
-  if [ "$JOBS" = "true" ]; then
-    # Restart DJ workers
-    ./script/delayed_job restart
-  fi
-
   echo "Restart puma..."
   StartDate=$(date -u +"%s")
   ./script/restart-puma "$restart_mode"

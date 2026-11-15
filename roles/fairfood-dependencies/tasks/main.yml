@@ -28,7 +28,6 @@
     - git
     - imagemagick
     - memcached
-    - monit
     - nginx
     # For Ruby 3.2
     - libyaml-dev
@@ -40,21 +39,3 @@
     - unattended-upgrades
     state: "present"
   become: yes
-
-- name: Install monit configuration file
-  template:
-    src: "monit/rails-fairfood.j2"
-    dest: "/etc/monit/conf.d/rails-fairfood"
-    mode: 0644
-
-- name: Enable monit httpd interface
-  replace:
-    path: /etc/monit/monitrc
-    # Uncomment matching lines
-    regexp: '^#\s?(\s*){{ item }}(.+)$'
-    replace: '\1{{ item }}\2'
-  loop:
-    - 'set httpd port'
-    - 'use address localhost'
-    - 'allow localhost'
-  notify: Reload monit
