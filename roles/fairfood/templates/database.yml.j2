@@ -5,7 +5,7 @@ staging:
   encoding: utf8
   reconnect: false
   database: {{ db_name }}
-  pool: 8
+  pool: 100 # no limit
   username: {{ db_user }}
   password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
   host: localhost
@@ -15,7 +15,7 @@ production:
   encoding: utf8
   reconnect: false
   database: {{ db_name }}
-  pool: 8
+  pool: 100 # no limit
   username: {{ db_user }}
   password: "{{ lookup('password', 'credentials/' + ansible_host + '/mysqlpassword length=15') }}"
   host: localhost
