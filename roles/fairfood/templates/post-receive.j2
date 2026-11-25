@@ -40,12 +40,6 @@ upgrade_application() {
   if [ "$RAILS_ENV" = "production" ]; then
     echo "Upload public/assets/ to CDN (live:upload_assets)..."
     bundle exec rake live:upload_assets
-
-    if [ "$JOBS" = "true" ]; then
-      echo "Install schedule cron jobs (whenever)..."
-      # TODO: make schedule server-agnostic so it can run on staging too
-      bundle exec whenever --set "environment=$RAILS_ENV" --update-crontab "{{ app_user }}"
-    fi
   fi
 
   echo "Restart puma..."

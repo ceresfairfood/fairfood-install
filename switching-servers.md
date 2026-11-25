@@ -161,7 +161,6 @@ Most steps are reversible, but not all (switching databases).
 - [ ] On new server:
   ```
   mysql -e "STOP SLAVE; SET GLOBAL read_only = 0;" &&\
-  su - fairfood -c "cd current && bundle exec whenever --set environment=production --update-crontab fairfood"
   su - fairfood -c "cd current && RAILS_ENV=production ./script/delayed_job start"
   ```
 - [ ] Monitor log files:
