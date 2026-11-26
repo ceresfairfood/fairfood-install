@@ -66,7 +66,7 @@
     - "{{ current_path }}/tmp"
     - "{{ current_path }}/tmp/socks"
 
-- name: Allow web server to read newly created public files
+- name: Allow web server to traverse and read newly created public files
   become: yes
   become_user: root
   file:
